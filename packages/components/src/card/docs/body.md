@@ -16,20 +16,9 @@ const Example = () => (
 
 ## Props
 
-### isShady
-
-Renders with a light gray background color.
-
--   Type: `Boolean`
--   Required: No
--   Default: `false`
-
-### size
-
-Determines the amount of padding within the component.
-
--   Type: `String`
--   Required: No
--   Default: `medium`
+Name | Type | Default | Description
+--- | --- | --- | ---
+`isShady` | `boolean` | `false` | Renders with a light gray background color.
+`size` | `string` | `medium` | Determines the amount of padding within the component.
 
 Note: This component is connected to [`<Card />`'s Context](../README.md#context). Passing props directly to this component will override the props derived from context.

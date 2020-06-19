@@ -3,7 +3,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import {
-	ToolbarButton,
+	Button,
 	PanelBody,
 	ToggleControl,
 	ToolbarGroup,
@@ -26,7 +26,7 @@ const EmbedControls = ( props ) => {
 			<BlockControls>
 				<ToolbarGroup>
 					{ showEditButton && (
-						<ToolbarButton
+						<Button
 							className="components-toolbar__control"
 							label={ __( 'Edit URL' ) }
 							icon={ pencil }

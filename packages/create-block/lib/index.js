@@ -42,14 +42,6 @@ program
 	// The name "description" is used internally so it couldn't be used.
 	.option( '--short-description <value>', 'short description for the block' )
 	.option( '--category <name>', 'category name for the block' )
-	.option(
-		'--wp-scripts',
-		'enable integration with `@wordpress/scripts` package'
-	)
-	.option(
-		'--no-wp-scripts',
-		'disable integration with `@wordpress/scripts` package'
-	)
 	.action(
 		async (
 			slug,
@@ -59,24 +51,18 @@ program
 				shortDescription: description,
 				template: templateName,
 				title,
-				wpScripts,
 			}
 		) => {
 			await checkSystemRequirements( engines );
 			try {
 				const blockTemplate = await getBlockTemplate( templateName );
 				const defaultValues = getDefaultValues( blockTemplate );
-				const optionsValues = pickBy(
-					{
-						category,
-						description,
-						namespace,
-						title,
-						wpScripts,
-					},
-					( value ) => value !== undefined
-				);
-
+				const optionsValues = pickBy( {
+					category,
+					description,
+					namespace,
+					title,
+				} );
 				if ( slug ) {
 					const answers = {
 						...defaultValues,

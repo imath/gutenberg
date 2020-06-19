@@ -14,42 +14,21 @@ import {
 	__experimentalBlock as Block,
 } from '@wordpress/block-editor';
 import { PanelBody, RangeControl } from '@wordpress/components';
-import { useSelect, useDispatch } from '@wordpress/data';
+import { withDispatch, withSelect } from '@wordpress/data';
+import { compose } from '@wordpress/compose';
 import { __ } from '@wordpress/i18n';
 
 function ColumnEdit( {
-	attributes: { verticalAlignment, width },
+	attributes,
 	setAttributes,
-	clientId,
+	updateAlignment,
+	hasChildBlocks,
 } ) {
+	const { verticalAlignment, width } = attributes;
+
 	const classes = classnames( 'block-core-columns', {
 		[ `is-vertically-aligned-${ verticalAlignment }` ]: verticalAlignment,
 	} );
-
-	const { hasChildBlocks, rootClientId } = useSelect(
-		( select ) => {
-			const { getBlockOrder, getBlockRootClientId } = select(
-				'core/block-editor'
-			);
-
-			return {
-				hasChildBlocks: getBlockOrder( clientId ).length > 0,
-				rootClientId: getBlockRootClientId( clientId ),
-			};
-		},
-		[ clientId ]
-	);
-
-	const { updateBlockAttributes } = useDispatch( 'core/block-editor' );
-
-	const updateAlignment = ( value ) => {
-		// Update own alignment.
-		setAttributes( { verticalAlignment: value } );
-		// Reset parent Columns block.
-		updateBlockAttributes( rootClientId, {
-			verticalAlignment: null,
-		} );
-	};
 
 	const hasWidth = Number.isFinite( width );
 
@@ -97,4 +76,35 @@ function ColumnEdit( {
 	);
 }
 
-export default ColumnEdit;
+export default compose(
+	withSelect( ( select, ownProps ) => {
+		const { clientId } = ownProps;
+		const { getBlockOrder } = select( 'core/block-editor' );
+
+		return {
+			hasChildBlocks: getBlockOrder( clientId ).length > 0,
+		};
+	} ),
+	withDispatch( ( dispatch, ownProps, registry ) => {
+		return {
+			updateAlignment( verticalAlignment ) {
+				const { clientId, setAttributes } = ownProps;
+				const { updateBlockAttributes } = dispatch(
+					'core/block-editor'
+				);
+				const { getBlockRootClientId } = registry.select(
+					'core/block-editor'
+				);
+
+				// Update own alignment.
+				setAttributes( { verticalAlignment } );
+
+				// Reset Parent Columns Block
+				const rootClientId = getBlockRootClientId( clientId );
+				updateBlockAttributes( rootClientId, {
+					verticalAlignment: null,
+				} );
+			},
+		};
+	} )
+)( ColumnEdit );

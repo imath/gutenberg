@@ -11,8 +11,7 @@ import { HorizontalRule } from '@wordpress/primitives';
 /**
  * Internal dependencies
  */
-import Flex from '../../flex';
-import { color, space } from '../../utils/style-mixins';
+import { color } from '../../utils/colors';
 
 export const styleProps = {
 	borderColor: color( 'lightGray.500' ),
@@ -37,7 +36,7 @@ export const CardUI = styled.div`
 	}
 `;
 
-export const HeaderUI = styled( Flex )`
+export const HeaderUI = styled.div`
 	border-bottom: 1px solid ${ borderColor };
 	border-top-left-radius: ${ borderRadius };
 	border-top-right-radius: ${ borderRadius };
@@ -82,7 +81,7 @@ export const BodyUI = styled.div`
 	${ handleShady };
 `;
 
-export const FooterUI = styled( Flex )`
+export const FooterUI = styled.div`
 	border-top: 1px solid ${ borderColor };
 	border-bottom-left-radius: ${ borderRadius };
 	border-bottom-right-radius: ${ borderRadius };
@@ -110,16 +109,16 @@ export function bodySize() {
 	return `
 		&.is-size {
 			&-large {
-				padding: ${ space( 3 ) } ${ space( 4 ) };
+				padding: 24px 32px;
 			}
 			&-medium {
-				padding: ${ space( 2 ) } ${ space( 3 ) };
+				padding: 16px 24px;
 			}
 			&-small {
-				padding: ${ space( 2 ) };
+				padding: 16px;
 			}
 			&-extraSmall {
-				padding: ${ space( 1 ) };
+				padding: 8px;
 			}
 		}
 	`;
@@ -129,16 +128,16 @@ export function headerFooterSizes() {
 	return `
 		&.is-size {
 			&-large {
-				padding: ${ space( 3 ) } ${ space( 4 ) };
+				padding: 24px 32px;
 			}
 			&-medium {
-				padding: ${ space( 2 ) } ${ space( 3 ) };
+				padding: 16px 24px;
 			}
 			&-small {
-				padding: ${ space( 2 ) };
+				padding: 16px;
 			}
 			&-extraSmall {
-				padding: ${ space( 1 ) };
+				padding: 8px;
 			}
 		}
 	`;

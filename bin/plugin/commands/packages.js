@@ -145,8 +145,7 @@ async function updatePackageChangelogs(
 				// A version bump required. Found new changelog section.
 				if (
 					versionBump !== 'minor' &&
-					( lineNormalized.startsWith( '### ' ) ||
-						lineNormalized.startsWith( '- initial release' ) )
+					lineNormalized.startsWith( '### ' )
 				) {
 					versionBump = minimumVersionBump;
 				}

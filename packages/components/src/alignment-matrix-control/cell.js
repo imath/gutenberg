@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { CompositeItem } from 'reakit/Composite';
+import { unstable_CompositeItem as CompositeItem } from 'reakit/Composite';
 
 /**
  * Internal dependencies

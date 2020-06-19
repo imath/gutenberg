@@ -1,25 +1,16 @@
 /**
  * WordPress dependencies
  */
-import { useSelect } from '@wordpress/data';
+import { withSelect } from '@wordpress/data';
+import { ifCondition, compose } from '@wordpress/compose';
 
 /**
  * Internal dependencies
  */
+import BlockTypesList from '../block-types-list';
 import BlockIcon from '../block-icon';
 
-export default function ChildBlocks( { rootClientId, children } ) {
-	const { rootBlockTitle, rootBlockIcon } = useSelect( ( select ) => {
-		const { getBlockType } = select( 'core/blocks' );
-		const { getBlockName } = select( 'core/block-editor' );
-		const rootBlockName = getBlockName( rootClientId );
-		const rootBlockType = getBlockType( rootBlockName );
-		return {
-			rootBlockTitle: rootBlockType && rootBlockType.title,
-			rootBlockIcon: rootBlockType && rootBlockType.icon,
-		};
-	} );
-
+function ChildBlocks( { rootBlockIcon, rootBlockTitle, items, ...props } ) {
 	return (
 		<div className="block-editor-inserter__child-blocks">
 			{ ( rootBlockIcon || rootBlockTitle ) && (
@@ -28,7 +19,21 @@ export default function ChildBlocks( { rootClientId, children } ) {
 					{ rootBlockTitle && <h2>{ rootBlockTitle }</h2> }
 				</div>
 			) }
-			{ children }
+			<BlockTypesList items={ items } { ...props } />
 		</div>
 	);
 }
+
+export default compose(
+	ifCondition( ( { items } ) => items && items.length > 0 ),
+	withSelect( ( select, { rootClientId } ) => {
+		const { getBlockType } = select( 'core/blocks' );
+		const { getBlockName } = select( 'core/block-editor' );
+		const rootBlockName = getBlockName( rootClientId );
+		const rootBlockType = getBlockType( rootBlockName );
+		return {
+			rootBlockTitle: rootBlockType && rootBlockType.title,
+			rootBlockIcon: rootBlockType && rootBlockType.icon,
+		};
+	} )
+)( ChildBlocks );

@@ -10,9 +10,9 @@ const { dirname } = require( 'path' );
 /**
  * Internal dependencies
  */
-const initPackageJSON = require( './init-package-json' );
 const initWPScripts = require( './init-wp-scripts' );
 const { code, info, success } = require( './log' );
+const { hasWPScriptsEnabled } = require( './templates' );
 
 module.exports = async (
 	blockTemplate,
@@ -27,7 +27,6 @@ module.exports = async (
 		license,
 		licenseURI,
 		version,
-		wpScripts,
 	}
 ) => {
 	slug = slug.toLowerCase();
@@ -67,9 +66,7 @@ module.exports = async (
 		} )
 	);
 
-	await initPackageJSON( view );
-
-	if ( wpScripts ) {
+	if ( hasWPScriptsEnabled( blockTemplate ) ) {
 		await initWPScripts( view );
 	}
 
@@ -77,7 +74,7 @@ module.exports = async (
 	success(
 		`Done: block "${ title }" bootstrapped in the "${ slug }" folder.`
 	);
-	if ( wpScripts ) {
+	if ( hasWPScriptsEnabled( blockTemplate ) ) {
 		info( '' );
 		info( 'Inside that directory, you can run several commands:' );
 		info( '' );

@@ -11,20 +11,20 @@ import Cell from './cell';
 import styles from './styles.scss';
 
 export default function BottomSheetColorCell( props ) {
-	const { color, withColorIndicator = true, ...cellProps } = props;
+	const { color, ...cellProps } = props;
 
 	return (
 		<Cell
 			{ ...cellProps }
-			accessibilityRole={ 'button' }
+			accessibilityRole={ 'none' }
 			accessibilityHint={
 				/* translators: accessibility text (hint for moving to color settings) */
 				__( 'Double tap to go to color settings' )
 			}
 			editable={ false }
-			value={ withColorIndicator && ! color && __( 'Default' ) }
+			value={ ! color && 'Default' }
 		>
-			{ withColorIndicator && color && (
+			{ color && (
 				<ColorIndicator color={ color } style={ styles.colorCircle } />
 			) }
 			<Icon icon={ chevronRight }></Icon>

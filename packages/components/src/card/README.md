@@ -16,29 +16,11 @@ const Example = () => (
 
 ## Props
 
-### isBorderless
-
-Determines the border style of the card.
-
--   Type: `Boolean`
--   Required: No
--   Default: `false`
-
-### isElevated
-
-Determines the elevation style of the card.
-
--   Type: `Boolean`
--   Required: No
--   Default: `false`
-
-### size
-
-Determines the amount of padding within the component.
-
--   Type: `String`
--   Required: No
--   Default: `medium`
+Name | Type | Default | Description
+--- | --- | --- | ---
+`isBorderless` | `boolean` | `false` | Determines the border style of the card.
+`isElevated` | `boolean` | `false` | Determines the elevation style of the card.
+`size` | `string` | `medium` | Determines the amount of padding within the card.
 
 ## Sub-Components
 
@@ -59,19 +41,27 @@ import {
 	CardDivider,
 	CardFooter,
 	CardHeader,
-	CardMedia,
+	CardMedia
 } from '@wordpress/components';
 
 const Example = () => (
 	<Card>
-		<CardHeader>...</CardHeader>
-		<CardBody>...</CardBody>
+		<CardHeader>
+			...
+		</CardHeader>
+		<CardBody>
+			...
+		</CardBody>
 		<CardDivider />
-		<CardBody>...</CardBody>
+		<CardBody>
+			...
+		</CardBody>
 		<CardMedia>
 			<img src="..." />
 		</CardMedia>
-		<CardHeader>...</CardHeader>
+		<CardHeader>
+			...
+		</CardHeader>
 	</Card>
 );
 ```

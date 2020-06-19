@@ -1,7 +1,15 @@
 /**
  * External dependencies
  */
-import { map, findIndex, flow, sortBy, groupBy, isEmpty } from 'lodash';
+import {
+	map,
+	includes,
+	findIndex,
+	flow,
+	sortBy,
+	groupBy,
+	isEmpty,
+} from 'lodash';
 
 /**
  * WordPress dependencies
@@ -40,14 +48,13 @@ export function InserterBlockList( {
 		rootClientId,
 		onInsert
 	);
-
-	const hasChildItems = useSelect(
+	const rootChildBlocks = useSelect(
 		( select ) => {
 			const { getBlockName } = select( 'core/block-editor' );
 			const { getChildBlockNames } = select( 'core/blocks' );
 			const rootBlockName = getBlockName( rootClientId );
 
-			return !! getChildBlockNames( rootBlockName ).length;
+			return getChildBlockNames( rootBlockName );
 		},
 		[ rootClientId ]
 	);
@@ -55,6 +62,12 @@ export function InserterBlockList( {
 	const filteredItems = useMemo( () => {
 		return searchBlockItems( items, categories, collections, filterValue );
 	}, [ filterValue, items, categories, collections ] );
+
+	const childItems = useMemo( () => {
+		return filteredItems.filter( ( { name } ) =>
+			includes( rootChildBlocks, name )
+		);
+	}, [ filteredItems, rootChildBlocks ] );
 
 	const suggestedItems = useMemo( () => {
 		return items.slice( 0, MAX_SUGGESTED_ITEMS );
@@ -114,21 +127,16 @@ export function InserterBlockList( {
 	}, [ filterValue, debouncedSpeak ] );
 
 	const hasItems = ! isEmpty( filteredItems );
+	const hasChildItems = childItems.length > 0;
 
 	return (
 		<div>
-			{ hasChildItems && (
-				<ChildBlocks rootClientId={ rootClientId }>
-					<BlockTypesList
-						// Pass along every block, as useBlockTypesState() and
-						// getInserterItems() will have already filtered out
-						// non-child blocks.
-						items={ filteredItems }
-						onSelect={ onSelectItem }
-						onHover={ onHover }
-					/>
-				</ChildBlocks>
-			) }
+			<ChildBlocks
+				rootClientId={ rootClientId }
+				items={ childItems }
+				onSelect={ onSelectItem }
+				onHover={ onHover }
+			/>
 
 			{ ! hasChildItems && !! suggestedItems.length && ! filterValue && (
 				<InserterPanel title={ _x( 'Most used', 'blocks' ) }>

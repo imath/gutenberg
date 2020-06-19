@@ -171,24 +171,14 @@ describe( 'Block Grouping', () => {
 			// Full width image.
 			await insertBlock( 'Image' );
 			await clickBlockToolbarButton( 'Change alignment' );
-			const fullButton = await page.waitForXPath(
-				`//button[contains(@class,'components-dropdown-menu__menu-item') and contains(text(), 'Full width')]`
-			);
-			await fullButton.evaluate( ( element ) =>
-				element.scrollIntoView()
-			);
-			await fullButton.click();
+			const FULL_WIDTH_BUTTON_XPATH = `//button[contains(@class,'components-dropdown-menu__menu-item') and contains(text(), 'Full width')]`;
+			await ( await page.$x( FULL_WIDTH_BUTTON_XPATH ) )[ 0 ].click();
 
 			// Wide width image.
 			await insertBlock( 'Image' );
 			await clickBlockToolbarButton( 'Change alignment' );
-			const wideButton = await page.waitForXPath(
-				`//button[contains(@class,'components-dropdown-menu__menu-item') and contains(text(), 'Wide width')]`
-			);
-			await wideButton.evaluate( ( element ) =>
-				element.scrollIntoView()
-			);
-			await wideButton.click();
+			const WIDE_BUTTON_XPATH = `//button[contains(@class,'components-dropdown-menu__menu-item') and contains(text(), 'Wide width')]`;
+			await ( await page.$x( WIDE_BUTTON_XPATH ) )[ 0 ].click();
 
 			await insertBlock( 'Paragraph' );
 			await page.keyboard.type( 'Some paragraph' );

@@ -1,7 +1,9 @@
 /**
  * External dependencies
  */
+/* eslint-disable import/no-extraneous-dependencies */
 import { boolean, select } from '@storybook/addon-knobs';
+/* eslint-enable import/no-extraneous-dependencies */
 
 export const getCardProps = ( props = {} ) => {
 	const { size } = props;

@@ -75,11 +75,11 @@ function OverlayColorSettings( { attributes, setAttributes } ) {
 
 	return (
 		<PanelColorGradientSettings
-			title={ __( 'Overlay' ) }
+			title={ __( 'Color Settings' ) }
 			initialOpen={ false }
 			settings={ [
 				{
-					label: __( 'Color' ),
+					label: __( 'Overlay Color' ),
 					onColorChange,
 					colorValue,
 					gradientValue,

@@ -5,9 +5,8 @@ import { useSelect } from '@wordpress/data';
 import {
 	SelectControl,
 	Button,
-	Card,
-	CardHeader,
-	CardBody,
+	Panel,
+	PanelBody,
 	Spinner,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -40,30 +39,27 @@ export default function MenuLocationsEditor() {
 
 	if ( menuLocations.length === 0 ) {
 		return (
-			<Card>
-				<CardHeader>{ __( 'Menu locations' ) }</CardHeader>
-				<CardBody>
+			<Panel className="edit-navigation-menu-editor__panel">
+				<PanelBody title={ __( 'Menu locations' ) }>
 					<p>{ __( 'There are no available menu locations' ) }</p>
-				</CardBody>
-			</Card>
+				</PanelBody>
+			</Panel>
 		);
 	}
 
 	if ( menus.length === 0 ) {
 		return (
-			<Card>
-				<CardHeader>{ __( 'Menu locations' ) }</CardHeader>
-				<CardBody>
+			<Panel className="edit-navigation-menu-editor__panel">
+				<PanelBody title={ __( 'Menu locations' ) }>
 					<p>{ __( 'There are no available menus' ) }</p>
-				</CardBody>
-			</Card>
+				</PanelBody>
+			</Panel>
 		);
 	}
 
 	return (
-		<Card>
-			<CardHeader>{ __( 'Menu locations' ) }</CardHeader>
-			<CardBody>
+		<Panel className="edit-navigation-menu-editor__panel">
+			<PanelBody title={ __( 'Menu locations' ) }>
 				<form
 					onSubmit={ ( event ) => {
 						event.preventDefault();
@@ -101,7 +97,7 @@ export default function MenuLocationsEditor() {
 						{ __( 'Save' ) }
 					</Button>
 				</form>
-			</CardBody>
-		</Card>
+			</PanelBody>
+		</Panel>
 	);
 }

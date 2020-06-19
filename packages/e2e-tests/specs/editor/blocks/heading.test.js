@@ -70,17 +70,16 @@ describe( 'Heading', () => {
 	it( 'it should correctly apply custom colors', async () => {
 		await clickBlockAppender();
 		await page.keyboard.type( '### Heading' );
-		const colorPanelToggle = await page.waitForXPath(
+		const [ colorPanelToggle ] = await page.$x(
 			COLOR_PANEL_TOGGLE_X_SELECTOR
 		);
 		await colorPanelToggle.click();
 
-		const customTextColorButton = await page.waitForXPath(
-			CUSTOM_COLOR_BUTTON_X_SELECTOR
+		const [ customTextColorButton ] = await page.$x(
+			`${ CUSTOM_COLOR_BUTTON_X_SELECTOR }`
 		);
 
 		await customTextColorButton.click();
-		await page.waitForSelector( COLOR_INPUT_FIELD_SELECTOR );
 		await page.click( COLOR_INPUT_FIELD_SELECTOR );
 		await pressKeyWithModifier( 'primary', 'A' );
 		await page.keyboard.type( '#7700ff' );

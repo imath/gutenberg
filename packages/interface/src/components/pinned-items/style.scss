@@ -2,11 +2,15 @@
 	display: flex;
 
 	.components-button {
-		margin-left: $grid-unit-05;
+		margin-left: 4px;
+
+		&.is-pressed {
+			margin-left: 5px;
+		}
 
 		svg {
-			max-width: $icon-size;
-			max-height: $icon-size;
+			max-width: 24px;
+			max-height: 24px;
 		}
 	}
 }

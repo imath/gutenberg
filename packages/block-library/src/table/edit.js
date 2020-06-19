@@ -25,7 +25,6 @@ import {
 	TextControl,
 	ToggleControl,
 	ToolbarGroup,
-	__experimentalToolbarItem as ToolbarItem,
 } from '@wordpress/components';
 import {
 	alignLeft,
@@ -598,17 +597,12 @@ export class TableEdit extends Component {
 			<>
 				<BlockControls>
 					<ToolbarGroup>
-						<ToolbarItem>
-							{ ( toggleProps ) => (
-								<DropdownMenu
-									hasArrowIndicator
-									icon={ table }
-									toggleProps={ toggleProps }
-									label={ __( 'Edit table' ) }
-									controls={ this.getTableControls() }
-								/>
-							) }
-						</ToolbarItem>
+						<DropdownMenu
+							hasArrowIndicator
+							icon={ table }
+							label={ __( 'Edit table' ) }
+							controls={ this.getTableControls() }
+						/>
 					</ToolbarGroup>
 					<AlignmentToolbar
 						label={ __( 'Change column alignment' ) }

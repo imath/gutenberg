@@ -160,8 +160,12 @@ function gutenberg_edit_site_init( $hook ) {
 		}
 	}
 
+	$current_template_id = $template_ids['front-page'];
+
 	$settings['editSiteInitialState'] = array();
 
+	$settings['editSiteInitialState']['homeTemplateId']  = $current_template_id;
+	$settings['editSiteInitialState']['templateId']      = $current_template_id;
 	$settings['editSiteInitialState']['templateType']    = 'wp_template';
 	$settings['editSiteInitialState']['templateIds']     = array_values( $template_ids );
 	$settings['editSiteInitialState']['templatePartIds'] = array_values( $template_part_ids );
@@ -188,6 +192,7 @@ function gutenberg_edit_site_init( $hook ) {
 		'/wp/v2/taxonomies?per_page=100&context=edit',
 		'/wp/v2/pages?per_page=100&context=edit',
 		'/wp/v2/themes?status=active',
+		sprintf( '/wp/v2/templates/%s?context=edit', $current_template_id ),
 		array( '/wp/v2/media', 'OPTIONS' ),
 	);
 	$preload_data  = array_reduce(

@@ -250,7 +250,7 @@ export const EXPECTED_TRANSFORMS = {
 		availableTransforms: [ 'Group' ],
 	},
 	'core__navigation-link': {
-		originalBlock: 'Link',
+		originalBlock: 'Navigation Link',
 		availableTransforms: [ 'Group' ],
 	},
 	core__nextpage: {

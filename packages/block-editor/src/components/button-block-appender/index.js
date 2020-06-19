@@ -9,7 +9,7 @@ import classnames from 'classnames';
 import { Button, Tooltip, VisuallyHidden } from '@wordpress/components';
 import { forwardRef } from '@wordpress/element';
 import { _x, sprintf } from '@wordpress/i18n';
-import { Icon, plus } from '@wordpress/icons';
+import { Icon, create } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -71,7 +71,7 @@ function ButtonBlockAppender(
 						{ ! hasSingleBlockType && (
 							<VisuallyHidden as="span">{ label }</VisuallyHidden>
 						) }
-						<Icon icon={ plus } />
+						<Icon icon={ create } />
 						{ hasSingleBlockType && (
 							<span className="block-editor-button-block-appender__label">
 								{ label }{ ' ' }

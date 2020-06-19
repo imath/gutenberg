@@ -35,14 +35,7 @@ function BottomSheetNavigationHeader( { leftButtonOnPress, screen } ) {
 
 	return (
 		<View style={ styles.bottomSheetHeader }>
-			<TouchableWithoutFeedback
-				onPress={ leftButtonOnPress }
-				accessibilityRole={ 'button' }
-				accessibilityLabel={ __( 'Go back' ) }
-				accessibilityHint={ __(
-					'Navigates to the previous content sheet'
-				) }
-			>
+			<TouchableWithoutFeedback onPress={ leftButtonOnPress }>
 				<View style={ styles.bottomSheetBackButton }>
 					{ isIOS ? (
 						<>

@@ -35,6 +35,7 @@ function ComplementaryAreaToggle( {
 	return (
 		<ComponentToUse
 			icon={ selectedIcon && isSelected ? selectedIcon : icon }
+			isSelected={ isSelected }
 			onClick={ () => {
 				if ( isSelected ) {
 					disableComplementaryArea( scope );

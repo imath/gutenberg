@@ -8,9 +8,8 @@ import { some } from 'lodash';
  */
 import {
 	Button,
-	Card,
-	CardHeader,
-	CardBody,
+	Panel,
+	PanelBody,
 	TextControl,
 	withFocusReturn,
 } from '@wordpress/components';
@@ -24,7 +23,7 @@ const noticeId = 'edit-navigation-create-menu-error';
 const menuNameMatches = ( menuName ) => ( menu ) =>
 	menu.name.toLowerCase() === menuName.toLowerCase();
 
-export function CreateMenuArea( { onCancel, onCreateMenu, menus } ) {
+export function CreateMenuForm( { onCancel, onCreateMenu, menus } ) {
 	const [ menuName, setMenuName ] = useState( '' );
 	const [ isCreatingMenu, setIsCreatingMenu ] = useState( false );
 	const menuSaveError = useSelect( ( select ) =>
@@ -93,9 +92,8 @@ export function CreateMenuArea( { onCancel, onCreateMenu, menus } ) {
 	);
 
 	return (
-		<Card className="edit-navigation-menus-editor__create-menu-area">
-			<CardHeader>{ __( 'Create navigation menu' ) }</CardHeader>
-			<CardBody>
+		<Panel className="edit-navigation-menus-editor__create-menu-panel">
+			<PanelBody title={ __( 'Create navigation menu' ) }>
 				<form onSubmit={ createMenu }>
 					<TextControl
 						// Disable reason - autoFocus is legitimate in this usage,
@@ -127,9 +125,9 @@ export function CreateMenuArea( { onCancel, onCreateMenu, menus } ) {
 						</Button>
 					) }
 				</form>
-			</CardBody>
-		</Card>
+			</PanelBody>
+		</Panel>
 	);
 }
 
-export default withFocusReturn( CreateMenuArea );
+export default withFocusReturn( CreateMenuForm );

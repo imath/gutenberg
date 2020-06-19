@@ -16,7 +16,7 @@ const { name } = metadata;
 export { metadata, name };
 
 export const settings = {
-	title: __( 'Link' ),
+	title: __( 'Navigation Link' ),
 	icon,
 	description: __( 'Add a page, link, or another item to your navigation.' ),
 	__experimentalLabel: ( { label } ) => label,
