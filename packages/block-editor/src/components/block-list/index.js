@@ -37,7 +37,7 @@ function BlockList(
 	function selector( select ) {
 		const {
 			getBlockOrder,
-			isMultiSelecting,
+			getBlockListSettings,
 			getSelectedBlockClientId,
 			getMultiSelectedBlockClientIds,
 			hasMultiSelection,
@@ -47,7 +47,6 @@ function BlockList(
 
 		return {
 			blockClientIds: getBlockOrder( rootClientId ),
-			isMultiSelecting: isMultiSelecting(),
 			selectedBlockClientId: getSelectedBlockClientId(),
 			multiSelectedBlockClientIds: getMultiSelectedBlockClientIds(),
 			hasMultiSelection: hasMultiSelection(),
@@ -59,7 +58,6 @@ function BlockList(
 
 	const {
 		blockClientIds,
-		isMultiSelecting,
 		selectedBlockClientId,
 		multiSelectedBlockClientIds,
 		hasMultiSelection,
@@ -95,8 +93,7 @@ function BlockList(
 						<BlockListBlock
 							rootClientId={ rootClientId }
 							clientId={ clientId }
-							isMultiSelecting={ isMultiSelecting }
-							// This prop is explicitly computed and passed down
+							// This prop is explicitely computed and passed down
 							// to avoid being impacted by the async mode
 							// otherwise there might be a small delay to trigger the animation.
 							index={ index }
