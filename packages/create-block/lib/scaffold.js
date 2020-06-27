@@ -10,6 +10,8 @@ const { dirname } = require( 'path' );
 /**
  * Internal dependencies
  */
+const initBlockJSON = require( './init-block-json' );
+const initPackageJSON = require( './init-package-json' );
 const initWPScripts = require( './init-wp-scripts' );
 const { code, info, success } = require( './log' );
 const { hasWPScriptsEnabled } = require( './templates' );
@@ -27,6 +29,10 @@ module.exports = async (
 		license,
 		licenseURI,
 		version,
+		wpScripts,
+		editorScript,
+		editorStyle,
+		style,
 	}
 ) => {
 	slug = slug.toLowerCase();
@@ -50,6 +56,10 @@ module.exports = async (
 		license,
 		licenseURI,
 		textdomain: namespace,
+		editorScript,
+		editorStyle,
+		style,
+		wpScripts,
 	};
 	await Promise.all(
 		Object.keys( outputTemplates ).map( async ( outputFile ) => {
@@ -66,7 +76,10 @@ module.exports = async (
 		} )
 	);
 
-	if ( hasWPScriptsEnabled( blockTemplate ) ) {
+	await initBlockJSON( view );
+	await initPackageJSON( view );
+
+	if ( wpScripts ) {
 		await initWPScripts( view );
 	}
 

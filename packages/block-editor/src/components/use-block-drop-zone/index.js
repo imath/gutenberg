@@ -13,7 +13,7 @@ import { useEffect, useState, useCallback } from '@wordpress/element';
 const parseDropEvent = ( event ) => {
 	let result = {
 		srcRootClientId: null,
-		srcClientId: null,
+		srcClientIds: null,
 		srcIndex: null,
 		type: null,
 	};
@@ -63,7 +63,7 @@ export default function useBlockDropZone( { element, rootClientId } ) {
 	const {
 		insertBlocks,
 		updateBlockAttributes,
-		moveBlockToPosition,
+		moveBlocksToPosition,
 	} = useDispatch( 'core/block-editor' );
 
 	const onFilesDrop = useCallback(
@@ -109,10 +109,10 @@ export default function useBlockDropZone( { element, rootClientId } ) {
 	const onDrop = useCallback(
 		( event ) => {
 			const {
-				srcRootClientId,
-				srcClientId,
-				srcIndex,
-				type,
+				srcRootClientId: sourceRootClientId,
+				srcClientIds: sourceClientIds,
+				srcIndex: sourceBlockIndex,
+				type: dropType,
 			} = parseDropEvent( event );
 
 			const isBlockDropType = ( dropType ) => dropType === 'block';
@@ -131,11 +131,9 @@ export default function useBlockDropZone( { element, rootClientId } ) {
 				);
 
 			if (
-				! isBlockDropType( type ) ||
-				isSameBlock( srcClientId, clientId ) ||
-				isSrcBlockAnAncestorOfDstBlock(
-					srcClientId,
-					clientId || rootClientId
+				sourceClientIds.includes( targetRootClientId ) ||
+				getClientIdsOfDescendants( sourceClientIds ).some(
+					( id ) => id === targetRootClientId
 				)
 			) {
 				return;
@@ -148,25 +146,23 @@ export default function useBlockDropZone( { element, rootClientId } ) {
 			// If the block is kept at the same level and moved downwards,
 			// subtract to account for blocks shifting upward to occupy its old position.
 			const insertIndex =
-				dstIndex &&
-				srcIndex < dstIndex &&
-				isSameLevel( srcRootClientId, rootClientId )
-					? positionIndex - 1
-					: positionIndex;
-			moveBlockToPosition(
-				srcClientId,
-				srcRootClientId,
-				rootClientId,
+				isAtSameLevel && sourceBlockIndex < targetBlockIndex
+					? targetBlockIndex - 1
+					: targetBlockIndex;
+
+			moveBlocksToPosition(
+				sourceClientIds,
+				sourceRootClientId,
+				targetRootClientId,
 				insertIndex
 			);
 		},
 		[
 			getClientIdsOfDescendants,
 			getBlockIndex,
-			clientId,
-			blockIndex,
-			moveBlockToPosition,
-			rootClientId,
+			targetBlockIndex,
+			moveBlocksToPosition,
+			targetRootClientId,
 		]
 	);
 
