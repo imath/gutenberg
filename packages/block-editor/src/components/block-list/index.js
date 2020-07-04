@@ -49,6 +49,7 @@ function BlockList(
 			blockClientIds: getBlockOrder( rootClientId ),
 			selectedBlockClientId: getSelectedBlockClientId(),
 			multiSelectedBlockClientIds: getMultiSelectedBlockClientIds(),
+			orientation: getBlockListSettings( rootClientId )?.orientation,
 			hasMultiSelection: hasMultiSelection(),
 			enableAnimation:
 				! isTyping() &&
@@ -60,6 +61,7 @@ function BlockList(
 		blockClientIds,
 		selectedBlockClientId,
 		multiSelectedBlockClientIds,
+		orientation,
 		hasMultiSelection,
 		enableAnimation,
 	} = useSelect( selector, [ rootClientId ] );
@@ -98,11 +100,12 @@ function BlockList(
 							// otherwise there might be a small delay to trigger the animation.
 							index={ index }
 							enableAnimation={ enableAnimation }
-							className={
-								clientId === targetClientId
-									? 'is-drop-target'
-									: undefined
-							}
+							className={ classnames( {
+								'is-drop-target': isDropTarget,
+								'is-dropping-horizontally':
+									isDropTarget &&
+									orientation === 'horizontal',
+							} ) }
 						/>
 					</AsyncModeProvider>
 				);
@@ -111,9 +114,11 @@ function BlockList(
 				tagName={ __experimentalAppenderTagName }
 				rootClientId={ rootClientId }
 				renderAppender={ renderAppender }
-				className={
-					targetClientId === null ? 'is-drop-target' : undefined
-				}
+				className={ classnames( {
+					'is-drop-target': isAppenderDropTarget,
+					'is-dropping-horizontally':
+						isAppenderDropTarget && orientation === 'horizontal',
+				} ) }
 			/>
 		</Container>
 	);

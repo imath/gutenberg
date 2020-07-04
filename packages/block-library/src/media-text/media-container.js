@@ -1,4 +1,10 @@
 /**
+ * External dependencies
+ */
+import classnames from 'classnames';
+import { noop } from 'lodash';
+
+/**
  * WordPress dependencies
  */
 import { ResizableBox, withNotices } from '@wordpress/components';
@@ -58,66 +64,35 @@ class MediaContainer extends Component {
 	renderToolbarEditButton() {
 		const { onSelectMedia, mediaUrl, mediaId } = this.props;
 		return (
-			<BlockControls>
-				<MediaReplaceFlow
+			<ResizableBoxContainer
+				as="figure"
+				className={ classnames(
+					className,
+					'editor-media-container__resizer'
+				) }
+				style={ backgroundStyles }
+				size={ { width: mediaWidth + '%' } }
+				minWidth="10%"
+				maxWidth="100%"
+				enable={ enablePositions }
+				onResizeStart={ onResizeStart }
+				onResize={ onResize }
+				onResizeStop={ onResizeStop }
+				axis="x"
+				isSelected={ isSelected }
+				isStackedOnMobile={ isStackedOnMobile }
+			>
+				<ToolbarEditButton
+					onSelectMedia={ onSelectMedia }
+					mediaUrl={ mediaUrl }
 					mediaId={ mediaId }
 					mediaURL={ mediaUrl }
 					allowedTypes={ ALLOWED_MEDIA_TYPES }
 					accept="image/*,video/*"
 					onSelect={ onSelectMedia }
 				/>
-			</BlockControls>
-		);
-	}
-
-	renderImage() {
-		const {
-			mediaAlt,
-			mediaUrl,
-			className,
-			imageFill,
-			focalPoint,
-		} = this.props;
-		const backgroundStyles = imageFill
-			? imageFillStyles( mediaUrl, focalPoint )
-			: {};
-		return (
-			<>
-				{ this.renderToolbarEditButton() }
-				<figure className={ className } style={ backgroundStyles }>
-					<img src={ mediaUrl } alt={ mediaAlt } />
-				</figure>
-			</>
-		);
-	}
-
-	renderVideo() {
-		const { mediaUrl, className } = this.props;
-		return (
-			<>
-				{ this.renderToolbarEditButton() }
-				<figure className={ className }>
-					<video controls src={ mediaUrl } />
-				</figure>
-			</>
-		);
-	}
-
-	renderPlaceholder() {
-		const { onSelectMedia, className, noticeUI } = this.props;
-		return (
-			<MediaPlaceholder
-				icon={ <BlockIcon icon={ icon } /> }
-				labels={ {
-					title: __( 'Media area' ),
-				} }
-				className={ className }
-				onSelect={ onSelectMedia }
-				accept="image/*,video/*"
-				allowedTypes={ ALLOWED_MEDIA_TYPES }
-				notices={ noticeUI }
-				onError={ this.onUploadError }
-			/>
+				{ ( mediaTypeRenderers[ mediaType ] || noop )() }
+			</ResizableBoxContainer>
 		);
 	}
 
