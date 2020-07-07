@@ -3,12 +3,12 @@
  */
 import {
 	map,
-	includes,
 	findIndex,
 	flow,
 	sortBy,
 	groupBy,
 	isEmpty,
+	orderBy,
 } from 'lodash';
 
 /**
@@ -68,7 +68,10 @@ export function BlockTypesTab( {
 	}, [ filteredItems, rootChildBlocks ] );
 
 	const suggestedItems = useMemo( () => {
-		return items.slice( 0, MAX_SUGGESTED_ITEMS );
+		return orderBy( items, [ 'frecency' ], [ 'desc' ] ).slice(
+			0,
+			MAX_SUGGESTED_ITEMS
+		);
 	}, [ items ] );
 
 	const uncategorizedItems = useMemo( () => {
