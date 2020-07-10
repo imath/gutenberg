@@ -137,7 +137,6 @@ function parseDropEvent( event ) {
 	let result = {
 		srcRootClientId: null,
 		srcClientIds: null,
-		srcIndex: null,
 		type: null,
 	};
 
@@ -160,28 +159,32 @@ function parseDropEvent( event ) {
 export default function useBlockDropZone( { element, rootClientId } ) {
 	const [ clientId, setClientId ] = useState( null );
 
-	function selector( select ) {
-		const {
-			getBlockListSettings,
-			getClientIdsOfDescendants,
-			getSettings,
-			getTemplateLock,
-		} = select( 'core/block-editor' );
-		return {
-			orientation: getBlockListSettings( targetRootClientId )
-				?.orientation,
-			getClientIdsOfDescendants,
-			hasUploadPermissions: !! getSettings().mediaUpload,
-			isLockedAll: getTemplateLock( rootClientId ) === 'all',
-		};
-	}
-
 	const {
 		getClientIdsOfDescendants,
+		getBlockIndex,
 		hasUploadPermissions,
 		isLockedAll,
 		orientation,
-	} = useSelect( selector, [ targetRootClientId ] );
+	} = useSelect(
+		( select ) => {
+			const {
+				getBlockListSettings,
+				getClientIdsOfDescendants: _getClientIdsOfDescendants,
+				getBlockIndex: _getBlockIndex,
+				getSettings,
+				getTemplateLock,
+			} = select( 'core/block-editor' );
+			return {
+				orientation: getBlockListSettings( targetRootClientId )
+					?.orientation,
+				getClientIdsOfDescendants: _getClientIdsOfDescendants,
+				getBlockIndex: _getBlockIndex,
+				hasUploadPermissions: !! getSettings().mediaUpload,
+				isLockedAll: getTemplateLock( targetRootClientId ) === 'all',
+			};
+		},
+		[ targetRootClientId ]
+	);
 	const {
 		insertBlocks,
 		updateBlockAttributes,
@@ -233,24 +236,23 @@ export default function useBlockDropZone( { element, rootClientId } ) {
 			const {
 				srcRootClientId: sourceRootClientId,
 				srcClientIds: sourceClientIds,
-				srcIndex: sourceBlockIndex,
 				type: dropType,
 			} = parseDropEvent( event );
 
-			const isBlockDropType = ( dropType ) => dropType === 'block';
-			const isSameLevel = ( srcRoot, dstRoot ) => {
-				// Note that rootClientId of top-level blocks will be undefined OR a void string,
-				// so we also need to account for that case separately.
-				return (
-					srcRoot === dstRoot ||
-					( ! srcRoot === true && ! dstRoot === true )
-				);
-			};
-			const isSameBlock = ( src, dst ) => src === dst;
-			const isSrcBlockAnAncestorOfDstBlock = ( src, dst ) =>
-				getClientIdsOfDescendants( [ src ] ).some(
-					( id ) => id === dst
-				);
+			// If the user isn't dropping a block, return early.
+			if ( dropType !== 'block' ) {
+				return;
+			}
+
+			const sourceBlockIndex = getBlockIndex( sourceClientIds[ 0 ] );
+
+			// If the user is dropping to the same position, return early.
+			if (
+				sourceRootClientId === targetRootClientId &&
+				sourceBlockIndex === targetBlockIndex
+			) {
+				return;
+			}
 
 			if (
 				sourceClientIds.includes( targetRootClientId ) ||
@@ -281,6 +283,7 @@ export default function useBlockDropZone( { element, rootClientId } ) {
 		},
 		[
 			getClientIdsOfDescendants,
+			getBlockIndex,
 			targetBlockIndex,
 			moveBlocksToPosition,
 			targetRootClientId,
