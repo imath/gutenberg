@@ -290,14 +290,23 @@ export class TableEdit extends Component {
 
 		const { attributes, setAttributes } = this.props;
 		const { sectionName, rowIndex } = selectedCell;
+		const newRowIndex = rowIndex + delta;
 
-		this.setState( { selectedCell: null } );
 		setAttributes(
 			insertRow( attributes, {
 				sectionName,
-				rowIndex: rowIndex + delta,
+				rowIndex: newRowIndex,
 			} )
 		);
+		// Select the first cell of the new row
+		this.setState( {
+			selectedCell: {
+				sectionName,
+				rowIndex: newRowIndex,
+				columnIndex: 0,
+				type: 'cell',
+			},
+		} );
 	}
 
 	/**
@@ -345,13 +354,21 @@ export class TableEdit extends Component {
 
 		const { attributes, setAttributes } = this.props;
 		const { columnIndex } = selectedCell;
+		const newColumnIndex = columnIndex + delta;
 
-		this.setState( { selectedCell: null } );
 		setAttributes(
 			insertColumn( attributes, {
-				columnIndex: columnIndex + delta,
+				columnIndex: newColumnIndex,
 			} )
 		);
+		// Select the first cell of the new column
+		this.setState( {
+			selectedCell: {
+				rowIndex: 0,
+				columnIndex: newColumnIndex,
+				type: 'cell',
+			},
+		} );
 	}
 
 	/**

@@ -3,12 +3,12 @@
  */
 import {
 	map,
-	includes,
 	findIndex,
 	flow,
 	sortBy,
 	groupBy,
 	isEmpty,
+	orderBy,
 } from 'lodash';
 
 /**
@@ -16,8 +16,6 @@ import {
  */
 import { __, _x, _n, sprintf } from '@wordpress/i18n';
 import { withSpokenMessages } from '@wordpress/components';
-import { addQueryArgs } from '@wordpress/url';
-import { controlsRepeat } from '@wordpress/icons';
 import { useMemo, useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 
@@ -70,14 +68,11 @@ export function BlockTypesTab( {
 	}, [ filteredItems, rootChildBlocks ] );
 
 	const suggestedItems = useMemo( () => {
-		return items.slice( 0, MAX_SUGGESTED_ITEMS );
-	}, [ items ] );
-
-	const reusableItems = useMemo( () => {
-		return filteredItems.filter(
-			( { category } ) => category === 'reusable'
+		return orderBy( items, [ 'frecency' ], [ 'desc' ] ).slice(
+			0,
+			MAX_SUGGESTED_ITEMS
 		);
-	}, [ filteredItems ] );
+	}, [ items ] );
 
 	const uncategorizedItems = useMemo( () => {
 		return filteredItems.filter( ( item ) => ! item.category );
@@ -206,28 +201,6 @@ export function BlockTypesTab( {
 						</InserterPanel>
 					);
 				} ) }
-
-			{ ! hasChildItems && !! reusableItems.length && (
-				<InserterPanel
-					className="block-editor-inserter__reusable-blocks-panel"
-					title={ __( 'Reusable' ) }
-					icon={ controlsRepeat }
-				>
-					<BlockTypesList
-						items={ reusableItems }
-						onSelect={ onSelectItem }
-						onHover={ onHover }
-					/>
-					<a
-						className="block-editor-inserter__manage-reusable-blocks"
-						href={ addQueryArgs( 'edit.php', {
-							post_type: 'wp_block',
-						} ) }
-					>
-						{ __( 'Manage all reusable blocks' ) }
-					</a>
-				</InserterPanel>
-			) }
 
 			<__experimentalInserterMenuExtension.Slot
 				fillProps={ {
