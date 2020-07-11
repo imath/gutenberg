@@ -333,6 +333,7 @@ const Cover = ( {
 
 			<MediaUpload
 				allowedTypes={ ALLOWED_MEDIA_TYPES }
+				isReplacingMedia={ true }
 				onSelect={ onSelectMedia }
 				render={ renderBackground }
 			/>
