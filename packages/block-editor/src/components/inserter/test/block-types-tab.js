@@ -29,7 +29,13 @@ jest.mock( '@wordpress/data/src/components/use-dispatch', () => {
 const debouncedSpeak = jest.fn();
 
 function InserterBlockList( props ) {
-	return <BlockTypesTab debouncedSpeak={ debouncedSpeak } { ...props } />;
+	return (
+		<BlockTypesTab
+			debouncedSpeak={ debouncedSpeak }
+			onHover={ () => {} }
+			{ ...props }
+		/>
+	);
 }
 
 const initializeAllClosedMenuState = ( propOverrides ) => {

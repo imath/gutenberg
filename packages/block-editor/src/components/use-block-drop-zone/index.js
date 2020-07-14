@@ -50,8 +50,8 @@ export function getNearestBlockIndex( elements, position, orientation ) {
 	let candidateDistance;
 
 	elements.forEach( ( element, index ) => {
-		// Ensure the element is a block. It should have the `data-block` attribute.
-		if ( ! element.dataset.block ) {
+		// Ensure the element is a block. It should have the `wp-block` class.
+		if ( ! element.classList.contains( 'wp-block' ) ) {
 			return;
 		}
 
@@ -302,23 +302,14 @@ export default function useBlockDropZone( { element, rootClientId } ) {
 	useEffect( () => {
 		if ( position ) {
 			const blockElements = Array.from( element.current.children );
+
 			const targetIndex = getNearestBlockIndex(
 				blockElements,
 				position,
 				orientation
 			);
 
-			if ( ! target ) {
-				return;
-			}
-
-			const targetClientId = target.id.slice( 'block-'.length );
-
-			if ( ! targetClientId ) {
-				return;
-			}
-
-			setClientId( targetClientId );
+			setTargetBlockIndex( targetIndex === undefined ? 0 : targetIndex );
 		}
 	}, [ position ] );
 
