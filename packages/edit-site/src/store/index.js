@@ -22,4 +22,8 @@ export default function registerEditSiteStore( initialState ) {
 		persist: [ 'preferences' ],
 		initialState,
 	} );
+
+	store.dispatch( actions.showHomepage() );
+
+	return store;
 }
