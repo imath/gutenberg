@@ -33,7 +33,9 @@ function ColorPalette( {
 	shouldEnableBottomSheetScroll,
 	shouldShowCustomIndicatorOption = true,
 	shouldShowCustomLabel = true,
+	shouldShowCustomVerticalSeparator = true,
 	customColorIndicatorStyles,
+	customIndicatorWrapperStyles,
 } ) {
 	const customSwatchGradients = [
 		'linear-gradient(120deg, rgba(255,0,0,.8), 0%, rgba(255,255,255,1) 70.71%)',
@@ -119,6 +121,16 @@ function ColorPalette( {
 		styles.verticalSeparatorDark
 	);
 
+	const customTextStyle = usePreferredColorSchemeStyle(
+		[ styles.customText, ! isIOS && styles.customTextAndroid ],
+		styles.customTextDark
+	);
+
+	const customIndicatorWrapperStyle = [
+		styles.customIndicatorWrapper,
+		customIndicatorWrapperStyles,
+	];
+
 	return (
 		<ScrollView
 			contentContainerStyle={ styles.contentContainer }
@@ -160,11 +172,21 @@ function ColorPalette( {
 					</TouchableWithoutFeedback>
 				);
 			} ) }
-			{ ! isGradientSegment && (
-				<>
-					<View style={ verticalSeparatorStyle } />
-					<TouchableWithoutFeedback onPress={ onCustomPress }>
-						<View>
+			{ shouldShowCustomIndicator && (
+				<View
+					style={ customIndicatorWrapperStyle }
+					onLayout={ onCustomIndicatorLayout }
+				>
+					{ shouldShowCustomVerticalSeparator && (
+						<View style={ verticalSeparatorStyle } />
+					) }
+					<TouchableWithoutFeedback
+						onPress={ onCustomPress }
+						accessibilityRole={ 'button' }
+						accessibilityState={ { selected: isSelectedCustom() } }
+						accessibilityHint={ accessibilityHint }
+					>
+						<View style={ customIndicatorWrapperStyle }>
 							<ColorIndicator
 								withCustomPicker={ ! isGradientSegment }
 								color={ customSwatchGradients }
