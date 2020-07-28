@@ -55,7 +55,7 @@ module.exports = async (
 		author,
 		license,
 		licenseURI,
-		textdomain: namespace,
+		textdomain: slug,
 		editorScript,
 		editorStyle,
 		style,
