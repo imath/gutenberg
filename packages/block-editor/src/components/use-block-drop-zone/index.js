@@ -156,8 +156,28 @@ function parseDropEvent( event ) {
 	return result;
 };
 
-export default function useBlockDropZone( { element, rootClientId } ) {
-	const [ clientId, setClientId ] = useState( null );
+/**
+ * @typedef  {Object} WPBlockDropZoneConfig
+ * @property {Object} element      A React ref object pointing to the block list's DOM element.
+ * @property {string} rootClientId The root client id for the block list.
+ */
+
+/**
+ * A React hook that can be used to make a block list handle drag and drop.
+ *
+ * @param {WPBlockDropZoneConfig} dropZoneConfig configuration data for the drop zone.
+ *
+ * @return {number|undefined} The block index that's closest to the drag position.
+ */
+export default function useBlockDropZone( {
+	element,
+	// An undefined value represents a top-level block. Default to an empty
+	// string for this so that `targetRootClientId` can be easily compared to
+	// values returned by the `getRootBlockClientId` selector, which also uses
+	// an empty string to represent top-level blocks.
+	rootClientId: targetRootClientId = '',
+} ) {
+	const [ targetBlockIndex, setTargetBlockIndex ] = useState( null );
 
 	const {
 		getClientIdsOfDescendants,
@@ -266,16 +286,11 @@ export default function useBlockDropZone( { element, rootClientId } ) {
 				return;
 			}
 
-			const isAtSameLevel =
-				sourceRootClientId === targetRootClientId ||
-				( sourceRootClientId === '' &&
-					targetRootClientId === undefined );
-
-			const draggedBlockCount = sourceClientIds.length;
-
 			// If the block is kept at the same level and moved downwards,
 			// subtract to take into account that the blocks being dragged
 			// were removed from the block list.
+			const isAtSameLevel = sourceRootClientId === targetRootClientId;
+			const draggedBlockCount = sourceClientIds.length;
 			const insertIndex =
 				isAtSameLevel && sourceBlockIndex < targetBlockIndex
 					? targetBlockIndex - draggedBlockCount
