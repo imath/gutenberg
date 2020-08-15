@@ -111,6 +111,29 @@ function ColorPalette( {
 		outputRange: [ 1, 0.7, 1 ],
 	} );
 
+	function deselectCustomGradient() {
+		const { width } = Dimensions.get( 'window' );
+		const isVisible =
+			contentWidth - scrollPosition - customIndicatorWidth < width;
+
+		if ( isCustomGradientColor ) {
+			if ( ! isIOS ) {
+				// Scroll position on Android doesn't adjust automatically when removing the last item from the horizontal list.
+				// https://github.com/facebook/react-native/issues/27504
+				// Workaround: Force the scroll when deselecting custom gradient color and when custom indicator is visible on layout.
+				if (
+					isCustomGradientColor &&
+					isVisible &&
+					scrollViewRef.current
+				) {
+					scrollViewRef.current.scrollTo( {
+						x: scrollPosition - customIndicatorWidth,
+					} );
+				}
+			}
+		}
+	}
+
 	function onColorPress( color ) {
 		performAnimation( color );
 		setColor( color );

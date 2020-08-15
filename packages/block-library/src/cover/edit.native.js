@@ -206,8 +206,8 @@ const Cover = ( {
 
 	function openColorPicker() {
 		if ( isParentSelected ) {
-			openGeneralSidebar();
 			setCustomColorPickerShowing( true );
+			openGeneralSidebar();
 		}
 	}
 
@@ -303,25 +303,29 @@ const Cover = ( {
 			<BottomSheetConsumer>
 				{ ( {
 					shouldEnableBottomSheetScroll,
-					shouldDisableBottomSheetMaxHeight,
-					onCloseBottomSheet,
-					onHardwareButtonPress,
+					shouldEnableBottomSheetMaxHeight,
+					onHandleClosingBottomSheet,
+					onHandleHardwareButtonPress,
 					isBottomSheetContentScrolling,
 				} ) => (
 					<ColorPicker
 						shouldEnableBottomSheetScroll={
 							shouldEnableBottomSheetScroll
 						}
-						shouldDisableBottomSheetMaxHeight={
-							shouldDisableBottomSheetMaxHeight
+						shouldEnableBottomSheetMaxHeight={
+							shouldEnableBottomSheetMaxHeight
 						}
 						setColor={ ( color ) => {
 							setCustomColor( color );
 							setColor( color );
 						} }
 						onNavigationBack={ closeSettingsBottomSheet }
-						onCloseBottomSheet={ onCloseBottomSheet }
-						onHardwareButtonPress={ onHardwareButtonPress }
+						onHandleClosingBottomSheet={
+							onHandleClosingBottomSheet
+						}
+						onHandleHardwareButtonPress={
+							onHandleHardwareButtonPress
+						}
 						onBottomSheetClosed={ () => {
 							setCustomColorPickerShowing( false );
 						} }

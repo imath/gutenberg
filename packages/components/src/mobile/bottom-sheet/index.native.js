@@ -34,10 +34,11 @@ import PickerCell from './picker-cell';
 import SwitchCell from './switch-cell';
 import RangeCell from './range-cell';
 import ColorCell from './color-cell';
+import RadioCell from './radio-cell';
+import NavigationScreen from './bottom-sheet-navigation/navigation-screen';
+import NavigationContainer from './bottom-sheet-navigation/navigation-container';
 import KeyboardAvoidingView from './keyboard-avoiding-view';
 import { BottomSheetProvider } from './bottom-sheet-context';
-
-const ANIMATION_DURATION = 300;
 
 class BottomSheet extends Component {
 	constructor() {
@@ -49,6 +50,7 @@ class BottomSheet extends Component {
 		this.onShouldSetBottomSheetMaxHeight = this.onShouldSetBottomSheetMaxHeight.bind(
 			this
 		);
+
 		this.onDimensionsChange = this.onDimensionsChange.bind( this );
 		this.onCloseBottomSheet = this.onCloseBottomSheet.bind( this );
 		this.onHandleClosingBottomSheet = this.onHandleClosingBottomSheet.bind(
@@ -58,7 +60,6 @@ class BottomSheet extends Component {
 		this.onHandleHardwareButtonPress = this.onHandleHardwareButtonPress.bind(
 			this
 		);
-		this.onReplaceSubsheet = this.onReplaceSubsheet.bind( this );
 		this.keyboardWillShow = this.keyboardWillShow.bind( this );
 		this.keyboardDidHide = this.keyboardDidHide.bind( this );
 
@@ -69,11 +70,9 @@ class BottomSheet extends Component {
 			keyboardHeight: 0,
 			scrollEnabled: true,
 			isScrolling: false,
-			onCloseBottomSheet: null,
-			onHardwareButtonPress: null,
+			handleClosingBottomSheet: null,
+			handleHardwareButtonPress: null,
 			isMaxHeightSet: true,
-			currentScreen: '',
-			extraProps: {},
 		};
 
 		SafeArea.getSafeAreaInsetsForRootView().then(
@@ -121,6 +120,8 @@ class BottomSheet extends Component {
 	}
 
 	componentWillUnmount() {
+		this.keyboardWillShowListener.remove();
+		this.keyboardDidHideListener.remove();
 		if ( this.androidModalClosedSubscription ) {
 			this.androidModalClosedSubscription.remove();
 		}
@@ -133,16 +134,6 @@ class BottomSheet extends Component {
 			'safeAreaInsetsForRootViewDidChange',
 			this.onSafeAreaInsetsUpdate
 		);
-		this.keyboardWillShowListener.remove();
-		this.keyboardDidHideListener.remove();
-	}
-
-	componentDidUpdate( prevProps ) {
-		const { isVisible } = this.props;
-
-		if ( ! prevProps.isVisible && isVisible ) {
-			this.setState( { currentScreen: '' } );
-		}
 	}
 
 	onSafeAreaInsetsUpdate( result ) {
@@ -222,29 +213,34 @@ class BottomSheet extends Component {
 	}
 
 	onHandleClosingBottomSheet( action ) {
-		this.setState( { onCloseBottomSheet: action } );
+		this.setState( { handleClosingBottomSheet: action } );
 	}
 
 	onHandleHardwareButtonPress( action ) {
-		this.setState( { onHardwareButtonPress: action } );
+		this.setState( { handleHardwareButtonPress: action } );
 	}
 
 	onCloseBottomSheet() {
 		const { onClose } = this.props;
-		const { onCloseBottomSheet } = this.state;
-		if ( onCloseBottomSheet ) {
-			onCloseBottomSheet();
+		const { handleClosingBottomSheet } = this.state;
+		if ( handleClosingBottomSheet ) {
+			handleClosingBottomSheet();
 		}
-		onClose();
+		if ( onClose ) {
+			onClose();
+		}
+		this.onShouldSetBottomSheetMaxHeight( true );
 	}
 
 	onHardwareButtonPress() {
 		const { onClose } = this.props;
-		const { onHardwareButtonPress } = this.state;
-		if ( onHardwareButtonPress ) {
-			return onHardwareButtonPress();
+		const { handleHardwareButtonPress } = this.state;
+		if ( handleHardwareButtonPress && handleHardwareButtonPress() ) {
+			return;
 		}
-		return onClose();
+		if ( onClose ) {
+			return onClose();
+		}
 	}
 
 	getContentStyle() {
@@ -255,24 +251,6 @@ class BottomSheet extends Component {
 				( safeAreaBottomInset || 0 ) +
 				styles.scrollableContent.paddingBottom,
 		};
-	}
-
-	onReplaceSubsheet( destination, extraProps, callback ) {
-		LayoutAnimation.configureNext(
-			LayoutAnimation.create(
-				ANIMATION_DURATION,
-				LayoutAnimation.Types.easeInEaseOut,
-				LayoutAnimation.Properties.opacity
-			)
-		);
-
-		this.setState(
-			{
-				currentScreen: destination,
-				extraProps: extraProps || {},
-			},
-			callback
-		);
 	}
 
 	render() {
@@ -298,8 +276,6 @@ class BottomSheet extends Component {
 			isScrolling,
 			scrollEnabled,
 			isMaxHeightSet,
-			extraProps,
-			currentScreen,
 		} = this.state;
 
 		const panResponder = PanResponder.create( {
@@ -369,7 +345,7 @@ class BottomSheet extends Component {
 			<Modal
 				isVisible={ isVisible }
 				style={ styles.bottomModal }
-				animationInTiming={ 600 }
+				animationInTiming={ 400 }
 				animationOutTiming={ 300 }
 				backdropTransitionInTiming={ 50 }
 				backdropTransitionOutTiming={ 50 }
@@ -413,16 +389,13 @@ class BottomSheet extends Component {
 							value={ {
 								shouldEnableBottomSheetScroll: this
 									.onShouldEnableScroll,
-								shouldDisableBottomSheetMaxHeight: this
+								shouldEnableBottomSheetMaxHeight: this
 									.onShouldSetBottomSheetMaxHeight,
 								isBottomSheetContentScrolling: isScrolling,
-								onCloseBottomSheet: this
+								onHandleClosingBottomSheet: this
 									.onHandleClosingBottomSheet,
-								onHardwareButtonPress: this
+								onHandleHardwareButtonPress: this
 									.onHandleHardwareButtonPress,
-								onReplaceSubsheet: this.onReplaceSubsheet,
-								extraProps,
-								currentScreen,
 								listProps,
 							} }
 						>
@@ -457,5 +430,8 @@ ThemedBottomSheet.PickerCell = PickerCell;
 ThemedBottomSheet.SwitchCell = SwitchCell;
 ThemedBottomSheet.RangeCell = RangeCell;
 ThemedBottomSheet.ColorCell = ColorCell;
+ThemedBottomSheet.RadioCell = RadioCell;
+ThemedBottomSheet.NavigationScreen = NavigationScreen;
+ThemedBottomSheet.NavigationContainer = NavigationContainer;
 
 export default ThemedBottomSheet;
