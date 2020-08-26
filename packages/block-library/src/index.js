@@ -75,12 +75,15 @@ import * as queryPagination from './query-pagination';
 import * as postTitle from './post-title';
 import * as postContent from './post-content';
 import * as postAuthor from './post-author';
+import * as postComment from './post-comment';
+import * as postCommentContent from './post-comment-content';
 import * as postComments from './post-comments';
 import * as postCommentsCount from './post-comments-count';
 import * as postCommentsForm from './post-comments-form';
 import * as postDate from './post-date';
 import * as postExcerpt from './post-excerpt';
 import * as postFeaturedImage from './post-featured-image';
+import * as postHierarchicalTerms from './post-hierarchical-terms';
 import * as postTags from './post-tags';
 
 /**
@@ -208,12 +211,15 @@ export const __experimentalRegisterExperimentalCoreBlocks =
 								postTitle,
 								postContent,
 								postAuthor,
+								postComment,
+								postCommentContent,
 								postComments,
 								postCommentsCount,
 								postCommentsForm,
 								postDate,
 								postExcerpt,
 								postFeaturedImage,
+								postHierarchicalTerms,
 								postTags,
 						  ]
 						: [] ),
