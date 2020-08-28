@@ -76,7 +76,9 @@ import * as postTitle from './post-title';
 import * as postContent from './post-content';
 import * as postAuthor from './post-author';
 import * as postComment from './post-comment';
+import * as postCommentAuthor from './post-comment-author';
 import * as postCommentContent from './post-comment-content';
+import * as postCommentDate from './post-comment-date';
 import * as postComments from './post-comments';
 import * as postCommentsCount from './post-comments-count';
 import * as postCommentsForm from './post-comments-form';
@@ -212,7 +214,9 @@ export const __experimentalRegisterExperimentalCoreBlocks =
 								postContent,
 								postAuthor,
 								postComment,
+								postCommentAuthor,
 								postCommentContent,
+								postCommentDate,
 								postComments,
 								postCommentsCount,
 								postCommentsForm,

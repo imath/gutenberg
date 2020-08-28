@@ -97,7 +97,6 @@ const BUILD_TASK_BY_EXTENSION = {
 			makeDir( path.dirname( outputFile ) ),
 			readFile( file, 'utf8' ),
 		] );
-
 		const builtSass = await renderSass( {
 			file,
 			includePaths: [ path.join( PACKAGES_DIR, 'base-styles' ) ],
@@ -110,6 +109,12 @@ const BUILD_TASK_BY_EXTENSION = {
 					'animations',
 					'z-index',
 				]
+					// Editor styles should be excluded from the default CSS vars output.
+					.concat(
+						file.includes( 'editor-styles.scss' )
+							? []
+							: [ 'default-custom-properties' ]
+					)
 					.map( ( imported ) => `@import "${ imported }";` )
 					.join( ' ' ) + contents,
 		} );
