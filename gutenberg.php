@@ -5,7 +5,7 @@
  * Description: Printing since 1440. This is the development plugin for the new block editor in core.
  * Requires at least: 5.3
  * Requires PHP: 5.6
- * Version: 8.9.1
+ * Version: 8.9.2
  * Author: Gutenberg Team
  * Text Domain: gutenberg
  *
@@ -45,7 +45,7 @@ function gutenberg_menu() {
 		'gutenberg'
 	);
 
-	if ( gutenberg_use_widgets_block_editor() ) {
+	if ( gutenberg_use_widgets_block_editor() && isset( $submenu['themes.php'] ) ) {
 		add_theme_page(
 			__( 'Widgets', 'gutenberg' ),
 			__( 'Widgets', 'gutenberg' ),
