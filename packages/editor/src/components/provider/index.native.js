@@ -12,6 +12,7 @@ import RNReactNativeGutenbergBridge, {
 	subscribeMediaAppend,
 	subscribeReplaceBlock,
 	subscribeUpdateTheme,
+	subscribeUpdateCapabilities,
 } from '@wordpress/react-native-bridge';
 
 /**
@@ -125,6 +126,12 @@ class NativeEditorProvider extends Component {
 				this.props.updateSettings( theme );
 			}
 		);
+
+		this.subscriptionParentUpdateCapabilities = subscribeUpdateCapabilities(
+			( payload ) => {
+				this.updateCapabilitiesAction( payload );
+			}
+		);
 	}
 
 	componentWillUnmount() {
@@ -154,6 +161,10 @@ class NativeEditorProvider extends Component {
 
 		if ( this.subscriptionParentUpdateTheme ) {
 			this.subscriptionParentUpdateTheme.remove();
+		}
+
+		if ( this.subscriptionParentUpdateCapabilities ) {
+			this.subscriptionParentUpdateCapabilities.remove();
 		}
 	}
 
@@ -217,13 +228,19 @@ class NativeEditorProvider extends Component {
 		switchMode( mode === 'visual' ? 'text' : 'visual' );
 	}
 
+	updateCapabilitiesAction( capabilities ) {
+		this.props.updateSettings( capabilities );
+	}
+
 	render() {
 		const {
 			children,
 			post, // eslint-disable-line no-unused-vars
+			capabilities,
 			...props
 		} = this.props;
 
+		this.props.updateSettings( capabilities );
 		return (
 			<EditorProvider post={ this.post } { ...props }>
 				{ children }
