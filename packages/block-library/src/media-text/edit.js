@@ -2,7 +2,7 @@
  * External dependencies
  */
 import classnames from 'classnames';
-import { get } from 'lodash';
+import { map, filter } from 'lodash';
 
 /**
  * WordPress dependencies
@@ -17,6 +17,7 @@ import {
 	InspectorControls,
 	__experimentalBlock as Block,
 	__experimentalImageURLInputUI as ImageURLInputUI,
+	__experimentalImageSizeControl as ImageSizeControl,
 } from '@wordpress/block-editor';
 import { Component } from '@wordpress/element';
 import {
@@ -33,6 +34,7 @@ import { pullLeft, pullRight } from '@wordpress/icons';
  * Internal dependencies
  */
 import MediaContainer from './media-container';
+import { DEFAULT_MEDIA_SIZE_SLUG } from './constants';
 
 /**
  * Constants
@@ -57,23 +59,16 @@ const applyWidthConstraints = ( width ) =>
 const LINK_DESTINATION_MEDIA = 'media';
 const LINK_DESTINATION_ATTACHMENT = 'attachment';
 
-class MediaTextEdit extends Component {
-	constructor() {
-		super( ...arguments );
+function getImageSourceUrlBySizeSlug( image, slug ) {
+	// eslint-disable-next-line camelcase
+	return image?.media_details?.sizes?.[ slug ]?.source_url;
+}
 
-		this.onSelectMedia = this.onSelectMedia.bind( this );
-		this.onWidthChange = this.onWidthChange.bind( this );
-		this.commitWidthChange = this.commitWidthChange.bind( this );
-		this.state = {
-			mediaWidth: null,
-		};
-		this.onSetHref = this.onSetHref.bind( this );
-	}
-
-	onSelectMedia( media ) {
-		const { setAttributes } = this.props;
-		const { linkDestination, href } = this.props.attributes;
-
+function attributesFromMedia( {
+	attributes: { linkDestination, href },
+	setAttributes,
+} ) {
+	return ( media ) => {
 		let mediaType;
 		let src;
 		// for media selections originated from a file upload.
@@ -144,6 +139,7 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 		rel,
 		verticalAlignment,
 	} = attributes;
+	const mediaSizeSlug = attributes.mediaSizeSlug || DEFAULT_MEDIA_SIZE_SLUG;
 
 	onWidthChange( width ) {
 		this.setState( {
@@ -202,6 +198,30 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 	const onVerticalAlignmentChange = ( alignment ) => {
 		setAttributes( { verticalAlignment: alignment } );
 	};
+
+	const imageSizes = useSelect( ( select ) => {
+		const settings = select( 'core/block-editor' ).getSettings();
+		return settings?.imageSizes;
+	} );
+	const imageSizeOptions = map(
+		filter( imageSizes, ( { slug } ) =>
+			getImageSourceUrlBySizeSlug( image, slug )
+		),
+		( { name, slug } ) => ( { value: slug, label: name } )
+	);
+	const updateImage = ( newMediaSizeSlug ) => {
+		const newUrl = getImageSourceUrlBySizeSlug( image, newMediaSizeSlug );
+
+		if ( ! newUrl ) {
+			return null;
+		}
+
+		setAttributes( {
+			mediaUrl: newUrl,
+			mediaSizeSlug: newMediaSizeSlug,
+		} );
+	};
+
 	const mediaTextGeneralSettings = (
 		<PanelBody title={ __( 'Media & Text settings' ) }>
 			<ToggleControl
@@ -288,6 +308,54 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 							isStackedOnMobile: ! isStackedOnMobile,
 						} )
 					}
+				/>
+			) }
+			{ imageFill && (
+				<FocalPointPicker
+					label={ __( 'Focal point picker' ) }
+					url={ mediaUrl }
+					value={ focalPoint }
+					onChange={ ( value ) =>
+						setAttributes( { focalPoint: value } )
+					}
+				/>
+			) }
+			{ mediaType === 'image' && (
+				<TextareaControl
+					label={ __( 'Alt text (alternative text)' ) }
+					value={ mediaAlt }
+					onChange={ onMediaAltChange }
+					help={
+						<>
+							<ExternalLink href="https://www.w3.org/WAI/tutorials/images/decision-tree">
+								{ __( 'Describe the purpose of the image' ) }
+							</ExternalLink>
+							{ __(
+								'Leave empty if the image is purely decorative.'
+							) }
+						</>
+					}
+				/>
+			) }
+			{ mediaType === 'image' && (
+				<ImageSizeControl
+					onChangeImage={ updateImage }
+					slug={ mediaSizeSlug }
+					imageSizeOptions={ imageSizeOptions }
+					isResizable={ false }
+				/>
+			) }
+		</PanelBody>
+	);
+
+	return (
+		<>
+			<InspectorControls>{ mediaTextGeneralSettings }</InspectorControls>
+			<BlockControls>
+				<ToolbarGroup controls={ toolbarControls } />
+				<BlockVerticalAlignmentToolbar
+					onChange={ onVerticalAlignmentChange }
+					value={ verticalAlignment }
 				/>
 				{ mediaType === 'image' && (
 					<ToggleControl
