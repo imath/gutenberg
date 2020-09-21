@@ -15,7 +15,7 @@ import {
 	BlockVerticalAlignmentToolbar,
 	InnerBlocks,
 	InspectorControls,
-	__experimentalBlock as Block,
+	__experimentalUseBlockWrapperProps as useBlockWrapperProps,
 	__experimentalImageURLInputUI as ImageURLInputUI,
 	__experimentalImageSizeControl as ImageSizeControl,
 } from '@wordpress/block-editor';
@@ -348,6 +348,11 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 		</PanelBody>
 	);
 
+	const blockWrapperProps = useBlockWrapperProps( {
+		className: classNames,
+		style,
+	} );
+
 	return (
 		<>
 			<InspectorControls>{ mediaTextGeneralSettings }</InspectorControls>
@@ -369,7 +374,7 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 					/>
 				) }
 			</BlockControls>
-			<Block.div className={ classNames } style={ style }>
+			<div { ...blockWrapperProps }>
 				<MediaContainer
 					className="wp-block-media-text__media"
 					onSelectMedia={ onSelectMedia }
@@ -396,7 +401,7 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 					template={ TEMPLATE }
 					templateInsertUpdatesSelection={ false }
 				/>
-			</Block.div>
+			</div>
 		</>
 	);
 }
