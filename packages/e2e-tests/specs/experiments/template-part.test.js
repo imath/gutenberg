@@ -118,6 +118,11 @@ describe( 'Template Part', () => {
 			await page.keyboard.type( testContent );
 			await page.click( savePostSelector );
 			await page.click( entitiesSaveSelector );
+
+			// TODO: Remove when toolbar supports text fields
+			expect( console ).toHaveWarnedWith(
+				'Using custom components as toolbar controls is deprecated. Please use ToolbarItem or ToolbarButton components instead. See: https://developer.wordpress.org/block-editor/components/toolbar-button/#inside-blockcontrols'
+			);
 		} );
 
 		it( 'Should prompt to Choose when match found', async () => {
@@ -146,6 +151,11 @@ describe( 'Template Part', () => {
 				testContentSelector
 			);
 			expect( templatePartContent ).toBeTruthy();
+
+			// TODO: Remove when toolbar supports text fields
+			expect( console ).toHaveWarnedWith(
+				'Using custom components as toolbar controls is deprecated. Please use ToolbarItem or ToolbarButton components instead. See: https://developer.wordpress.org/block-editor/components/toolbar-button/#inside-blockcontrols'
+			);
 		} );
 	} );
 } );
