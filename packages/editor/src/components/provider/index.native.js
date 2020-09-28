@@ -71,6 +71,10 @@ class NativeEditorProvider extends Component {
 	}
 
 	componentDidMount() {
+		const { capabilities } = this.props;
+
+		this.props.updateSettings( capabilities );
+
 		this.subscriptionParentGetHtml = subscribeParentGetHtml( () => {
 			this.serializeToNativeAction();
 		} );
@@ -236,11 +240,9 @@ class NativeEditorProvider extends Component {
 		const {
 			children,
 			post, // eslint-disable-line no-unused-vars
-			capabilities,
 			...props
 		} = this.props;
 
-		this.props.updateSettings( capabilities );
 		return (
 			<EditorProvider post={ this.post } { ...props }>
 				{ children }
