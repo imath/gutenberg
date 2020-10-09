@@ -13,7 +13,7 @@ import { withDispatch, withSelect } from '@wordpress/data';
 /**
  * Internal dependencies
  */
-import { EnablePluginDocumentSettingPanelOption } from '../../options-modal/options';
+import { EnablePluginDocumentSettingPanelOption } from '../../preferences-modal/options';
 
 export const { Fill, Slot } = createSlotFill( 'PluginDocumentSettingPanel' );
 
