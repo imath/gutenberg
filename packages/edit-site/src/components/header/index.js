@@ -9,10 +9,7 @@ import {
 	__experimentalPreviewOptions as PreviewOptions,
 } from '@wordpress/block-editor';
 import { useSelect, useDispatch } from '@wordpress/data';
-import {
-	PinnedItems,
-	__experimentalMainDashboardButton as MainDashboardButton,
-} from '@wordpress/interface';
+import { PinnedItems } from '@wordpress/interface';
 import { _x } from '@wordpress/i18n';
 import { plus } from '@wordpress/icons';
 import { Button } from '@wordpress/components';
@@ -25,38 +22,36 @@ import SaveButton from '../save-button';
 import UndoButton from './undo-redo/undo';
 import RedoButton from './undo-redo/redo';
 import DocumentActions from './document-actions';
-import NavigationToggle from './navigation-toggle';
 
-export default function Header( {
-	openEntitiesSavedStates,
-	isInserterOpen,
-	onToggleInserter,
-	isNavigationOpen,
-	onToggleNavigation,
-} ) {
-	const { deviceType, hasFixedToolbar, template } = useSelect( ( select ) => {
-		const {
-			__experimentalGetPreviewDeviceType,
-			isFeatureActive,
-			getTemplateId,
-			getTemplatePartId,
-			getTemplateType,
-		} = select( 'core/edit-site' );
-		const { getEntityRecord } = select( 'core' );
+export default function Header( { openEntitiesSavedStates } ) {
+	const { deviceType, hasFixedToolbar, template, isInserterOpen } = useSelect(
+		( select ) => {
+			const {
+				__experimentalGetPreviewDeviceType,
+				isFeatureActive,
+				getTemplateId,
+				isInserterOpened,
+			} = select( 'core/edit-site' );
+			const { getEntityRecord } = select( 'core' );
 
-		const _templateId = getTemplateId();
-		return {
-			deviceType: __experimentalGetPreviewDeviceType(),
-			hasFixedToolbar: isFeatureActive( 'fixedToolbar' ),
-			templateId: _templateId,
-			template: getEntityRecord( 'postType', 'wp_template', _templateId ),
-			templatePartId: getTemplatePartId(),
-			templateType: getTemplateType(),
-		};
-	}, [] );
+			const _templateId = getTemplateId();
+			return {
+				deviceType: __experimentalGetPreviewDeviceType(),
+				hasFixedToolbar: isFeatureActive( 'fixedToolbar' ),
+				template: getEntityRecord(
+					'postType',
+					'wp_template',
+					_templateId
+				),
+				isInserterOpen: isInserterOpened(),
+			};
+		},
+		[]
+	);
 
 	const {
 		__experimentalSetPreviewDeviceType: setPreviewDeviceType,
+		setIsInserterOpened,
 	} = useDispatch( 'core/edit-site' );
 
 	const isLargeViewport = useViewportMatch( 'medium' );
@@ -66,18 +61,14 @@ export default function Header( {
 	return (
 		<div className="edit-site-header">
 			<div className="edit-site-header_start">
-				<MainDashboardButton.Slot>
-					<NavigationToggle
-						isOpen={ isNavigationOpen }
-						onClick={ onToggleNavigation }
-					/>
-				</MainDashboardButton.Slot>
 				<div className="edit-site-header__toolbar">
 					<Button
 						isPrimary
 						isPressed={ isInserterOpen }
 						className="edit-site-header-toolbar__inserter-toggle"
-						onClick={ onToggleInserter }
+						onClick={ () =>
+							setIsInserterOpened( ! isInserterOpen )
+						}
 						icon={ plus }
 						label={ _x(
 							'Add block',
