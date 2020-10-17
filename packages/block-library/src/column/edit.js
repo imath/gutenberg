@@ -22,7 +22,7 @@ import { useSelect, useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 function ColumnEdit( {
-	attributes,
+	attributes: { verticalAlignment, width, templateLock = false },
 	setAttributes,
 	updateAlignment,
 	hasChildBlocks,
@@ -63,7 +63,7 @@ function ColumnEdit( {
 		style: width ? { flexBasis: width } : undefined,
 	} );
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
-		templateLock: false,
+		templateLock,
 		renderAppender: hasChildBlocks
 			? undefined
 			: InnerBlocks.ButtonBlockAppender,
