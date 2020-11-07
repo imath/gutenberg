@@ -15,32 +15,7 @@ module.exports = async ( { author, description, license, slug, version } ) => {
 	const cwd = join( process.cwd(), slug );
 
 	info( '' );
-	info( 'Creating a "package.json" file.' );
-	await writePkg(
-		cwd,
-		omitBy(
-			{
-				name: slug,
-				version,
-				description,
-				author,
-				license,
-				main: 'build/index.js',
-				scripts: {
-					build: 'wp-scripts build',
-					'format:js': 'wp-scripts format-js',
-					'lint:css': 'wp-scripts lint-style',
-					'lint:js': 'wp-scripts lint-js',
-					start: 'wp-scripts start',
-					'packages-update': 'wp-scripts packages-update',
-				},
-			},
-			isEmpty
-		)
-	);
-
-	info( '' );
-	info( 'Installing packages. It might take a couple of minutes.' );
+	info( 'Installing packages. It might take a couple of minutes...' );
 	await command( 'npm install @wordpress/scripts --save-dev', {
 		cwd,
 	} );

@@ -29,7 +29,7 @@ import Button from '../button';
 import ScrollLock from '../scroll-lock';
 import IsolatedEventContainer from '../isolated-event-container';
 import { Slot, Fill, useSlot } from '../slot-fill';
-import Animate from '../animate';
+import { useAnimate } from '../animate';
 
 const FocusManaged = withConstrainedTabbing(
 	withFocusReturn( ( { children } ) => children )
@@ -262,7 +262,7 @@ const Popover = ( {
 	animate = true,
 	onClickOutside,
 	onFocusOutside,
-	__unstableSticky,
+	__unstableStickyBoundaryElement,
 	__unstableSlotName = SLOT_NAME,
 	__unstableObserveElement,
 	__unstableBoundaryParent,
@@ -349,7 +349,7 @@ const Popover = ( {
 				anchor,
 				contentRect.current,
 				position,
-				__unstableSticky,
+				__unstableStickyBoundaryElement,
 				containerRef.current,
 				relativeOffsetTop,
 				boundaryElement
@@ -447,7 +447,8 @@ const Popover = ( {
 		anchorRef,
 		shouldAnchorIncludePadding,
 		position,
-		__unstableSticky,
+		contentSize,
+		__unstableStickyBoundaryElement,
 		__unstableObserveElement,
 		__unstableBoundaryParent,
 	] );
@@ -525,54 +526,55 @@ const Popover = ( {
 		onClickOutside( clickEvent );
 	}
 
+	const animateClassName = useAnimate( {
+		type: animate && animateOrigin ? 'appear' : null,
+		origin: animateOrigin,
+	} );
+
 	// Disable reason: We care to capture the _bubbled_ events from inputs
 	// within popover as inferring close intent.
 
 	let content = (
 		<PopoverDetectOutside onFocusOutside={ handleOnFocusOutside }>
-			<Animate
-				type={ animate && animateOrigin ? 'appear' : null }
-				options={ { origin: animateOrigin } }
-			>
-				{ ( { className: animateClassName } ) => (
-					<IsolatedEventContainer
-						className={ classnames(
-							'components-popover',
-							className,
-							animateClassName,
-							{
-								'is-expanded': isExpanded,
-								'is-without-arrow': noArrow,
-								'is-alternate': isAlternate,
-							}
-						) }
-						{ ...contentProps }
-						onKeyDown={ maybeClose }
-						ref={ containerRef }
-					>
-						{ isExpanded && <ScrollLock /> }
-						{ isExpanded && (
-							<div className="components-popover__header">
-								<span className="components-popover__header-title">
-									{ headerTitle }
-								</span>
-								<Button
-									className="components-popover__close"
-									icon={ close }
-									onClick={ onClose }
-								/>
-							</div>
-						) }
-						<div
-							ref={ contentRef }
-							className="components-popover__content"
-							tabIndex="-1"
-						>
-							{ children }
-						</div>
-					</IsolatedEventContainer>
+			<IsolatedEventContainer
+				className={ classnames(
+					'components-popover',
+					className,
+					animateClassName,
+					{
+						'is-expanded': isExpanded,
+						'is-without-arrow': noArrow,
+						'is-alternate': isAlternate,
+					}
 				) }
-			</Animate>
+				{ ...contentProps }
+				onKeyDown={ maybeClose }
+				ref={ containerRef }
+			>
+				{ isExpanded && <ScrollLock /> }
+				{ isExpanded && (
+					<div className="components-popover__header">
+						<span className="components-popover__header-title">
+							{ headerTitle }
+						</span>
+						<Button
+							className="components-popover__close"
+							icon={ close }
+							onClick={ onClose }
+						/>
+					</div>
+				) }
+				<div
+					ref={ contentRef }
+					className="components-popover__content"
+					tabIndex="-1"
+				>
+					<div style={ { position: 'relative' } }>
+						{ containerResizeListener }
+						{ children }
+					</div>
+				</div>
+			</IsolatedEventContainer>
 		</PopoverDetectOutside>
 	);
 
