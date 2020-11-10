@@ -75,3 +75,6 @@ body.toplevel_page_gutenberg-edit-site {
 		opacity: 1;
 	}
 }
+
+@include wordpress-admin-schemes();
+@include default-block-widths();
