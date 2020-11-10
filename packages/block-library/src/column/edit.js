@@ -58,9 +58,10 @@ function ColumnEdit( {
 		} );
 	};
 
+	const widthWithUnit = Number.isFinite( width ) ? width + '%' : width;
 	const blockProps = useBlockProps( {
 		className: classes,
-		style: width ? { flexBasis: width } : undefined,
+		style: widthWithUnit ? { flexBasis: widthWithUnit } : undefined,
 	} );
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
 		templateLock,
