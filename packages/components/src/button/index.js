@@ -35,6 +35,7 @@ export function Button( props, ref ) {
 		className,
 		disabled,
 		icon,
+		iconPosition = 'left',
 		iconSize,
 		showTooltip,
 		tooltipPosition,
@@ -113,8 +114,13 @@ export function Button( props, ref ) {
 			aria-label={ additionalProps[ 'aria-label' ] || label }
 			ref={ ref }
 		>
-			{ icon && <Icon icon={ icon } size={ iconSize } /> }
+			{ icon && iconPosition === 'left' && (
+				<Icon icon={ icon } size={ iconSize } />
+			) }
 			{ text && <>{ text }</> }
+			{ icon && iconPosition === 'right' && (
+				<Icon icon={ icon } size={ iconSize } />
+			) }
 			{ children }
 		</Tag>
 	);

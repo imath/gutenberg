@@ -259,9 +259,7 @@ describe( 'Template Part', () => {
 			expect( console ).toHaveWarnedWith(
 				'Using custom components as toolbar controls is deprecated. Please use ToolbarItem or ToolbarButton components instead. See: https://developer.wordpress.org/block-editor/components/toolbar-button/#inside-blockcontrols'
 			);
-		} );
 
-		it( 'Should prompt to Choose when match found', async () => {
 			await createNewPost();
 			await disablePrePublishChecks();
 			// Try to insert the template part we created.
@@ -272,16 +270,8 @@ describe( 'Template Part', () => {
 			await chooseExistingButton.click();
 			const preview = await page.waitForXPath( testContentSelector );
 			expect( preview ).toBeTruthy();
-		} );
 
-		it( 'Should dispaly a preview when match is found', async () => {
-			const [ preview ] = await page.$x( testContentSelector );
-			expect( preview ).toBeTruthy();
-		} );
-
-		it( 'Should insert the desired template part', async () => {
-			const [ placeholderButton ] = await page.$x( chooseButtonSelector );
-			await placeholderButton.click();
+			await preview.click();
 			await page.waitForSelector( activatedTemplatePartSelector );
 			const templatePartContent = await page.waitForXPath(
 				testContentSelector
