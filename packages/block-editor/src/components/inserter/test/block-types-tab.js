@@ -49,20 +49,6 @@ const initializeAllClosedMenuState = ( propOverrides ) => {
 	return result;
 };
 
-const assertNoResultsMessageToBePresent = ( element ) => {
-	const noResultsMessage = element.querySelector(
-		'.block-editor-inserter__no-results'
-	);
-	expect( noResultsMessage.textContent ).toEqual( 'No results found.' );
-};
-
-const assertNoResultsMessageNotToBePresent = ( element ) => {
-	const noResultsMessage = element.querySelector(
-		'.block-editor-inserter__no-results'
-	);
-	expect( noResultsMessage ).toBe( null );
-};
-
 describe( 'InserterMenu', () => {
 	beforeEach( () => {
 		debouncedSpeak.mockClear();
@@ -89,8 +75,6 @@ describe( 'InserterMenu', () => {
 		);
 
 		expect( visibleBlocks ).toBe( null );
-
-		assertNoResultsMessageToBePresent( container );
 	} );
 
 	it( 'should show items from the embed category in the embed tab', () => {
@@ -109,8 +93,6 @@ describe( 'InserterMenu', () => {
 		expect( blocks ).toHaveLength( 2 );
 		expect( blocks[ 0 ].textContent ).toBe( 'YouTube' );
 		expect( blocks[ 1 ].textContent ).toBe( 'A Paragraph Embed' );
-
-		assertNoResultsMessageNotToBePresent( container );
 	} );
 
 	it( 'should show the common category blocks', () => {
@@ -130,8 +112,18 @@ describe( 'InserterMenu', () => {
 		expect( blocks[ 0 ].textContent ).toBe( 'Paragraph' );
 		expect( blocks[ 1 ].textContent ).toBe( 'Advanced Paragraph' );
 		expect( blocks[ 2 ].textContent ).toBe( 'Some Other Block' );
+	} );
 
-		assertNoResultsMessageNotToBePresent( container );
+	it( 'displays child blocks UI when root block has child blocks', () => {
+		useSelect.mockImplementation( () => true );
+
+		const { container } = render( <InserterBlockList /> );
+
+		const childBlocksContent = container.querySelector(
+			'.block-editor-inserter__child-blocks'
+		);
+
+		expect( childBlocksContent ).not.toBeNull();
 	} );
 
 	it( 'should disable items with `isDisabled`', () => {
@@ -145,82 +137,5 @@ describe( 'InserterMenu', () => {
 
 		expect( disabledBlocks ).toHaveLength( 1 );
 		expect( disabledBlocks[ 0 ].textContent ).toBe( 'More' );
-	} );
-
-	it( 'should allow searching for items', () => {
-		const { container } = render(
-			<InserterBlockList filterValue="paragraph" />
-		);
-
-		const matchingCategories = container.querySelectorAll(
-			'.block-editor-inserter__panel-title'
-		);
-
-		expect( matchingCategories ).toHaveLength( 3 );
-		expect( matchingCategories[ 0 ].textContent ).toBe( 'Text' );
-		expect( matchingCategories[ 1 ].textContent ).toBe( 'Embeds' );
-		expect( matchingCategories[ 2 ].textContent ).toBe( 'Core' ); // "Core" namespace collection
-
-		const blocks = container.querySelectorAll(
-			'.block-editor-block-types-list__item-title'
-		);
-
-		// There are five buttons present for 3 total distinct results. The
-		// additional two account for the collection results (repeated).
-		expect( blocks ).toHaveLength( 5 );
-		expect( debouncedSpeak ).toHaveBeenCalledWith( '3 results found.' );
-
-		// Default block results.
-		expect( blocks[ 0 ].textContent ).toBe( 'Paragraph' );
-		expect( blocks[ 1 ].textContent ).toBe( 'Advanced Paragraph' );
-		expect( blocks[ 2 ].textContent ).toBe( 'A Paragraph Embed' );
-
-		// Collection results.
-		expect( blocks[ 3 ].textContent ).toBe( 'Paragraph' );
-		expect( blocks[ 4 ].textContent ).toBe( 'Advanced Paragraph' );
-
-		assertNoResultsMessageNotToBePresent( container );
-	} );
-
-	it( 'should speak after any change in search term', () => {
-		// The search result count should always be announced any time the user
-		// changes the search term, even if it results in the same count.
-		//
-		// See: https://github.com/WordPress/gutenberg/pull/22279#discussion_r423317161
-		const { rerender } = render(
-			<InserterBlockList filterValue="Advanced Para" />
-		);
-
-		rerender( <InserterBlockList filterValue="Advanced Paragraph" /> );
-		rerender( <InserterBlockList filterValue="Advanced Paragraph" /> );
-
-		expect( debouncedSpeak ).toHaveBeenCalledTimes( 2 );
-		expect( debouncedSpeak.mock.calls[ 0 ][ 0 ] ).toBe( '1 result found.' );
-		expect( debouncedSpeak.mock.calls[ 1 ][ 0 ] ).toBe( '1 result found.' );
-	} );
-
-	it( 'should trim whitespace of search terms', () => {
-		const { container } = render(
-			<InserterBlockList filterValue=" paragraph" />
-		);
-
-		const matchingCategories = container.querySelectorAll(
-			'.block-editor-inserter__panel-title'
-		);
-
-		expect( matchingCategories ).toHaveLength( 3 );
-		expect( matchingCategories[ 0 ].textContent ).toBe( 'Text' );
-		expect( matchingCategories[ 1 ].textContent ).toBe( 'Embeds' );
-
-		const blocks = container.querySelectorAll(
-			'.block-editor-block-types-list__item-title'
-		);
-
-		expect( blocks ).toHaveLength( 5 );
-		expect( blocks[ 0 ].textContent ).toBe( 'Paragraph' );
-		expect( blocks[ 1 ].textContent ).toBe( 'Advanced Paragraph' );
-		expect( blocks[ 2 ].textContent ).toBe( 'A Paragraph Embed' );
-
-		assertNoResultsMessageNotToBePresent( container );
 	} );
 } );
