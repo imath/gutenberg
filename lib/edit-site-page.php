@@ -183,7 +183,7 @@ add_action( 'admin_enqueue_scripts', 'gutenberg_edit_site_init' );
  */
 function register_site_editor_homepage_settings() {
 	register_setting(
-		'general',
+		'reading',
 		'show_on_front',
 		array(
 			'show_in_rest' => true,
@@ -193,7 +193,7 @@ function register_site_editor_homepage_settings() {
 	);
 
 	register_setting(
-		'general',
+		'reading',
 		'page_on_front',
 		array(
 			'show_in_rest' => true,
