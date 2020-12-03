@@ -1,8 +1,8 @@
 /**
  * WordPress dependencies
  */
-import { withSelect } from '@wordpress/data';
-import { ifCondition, compose } from '@wordpress/compose';
+import { store as blocksStore } from '@wordpress/blocks';
+import { useSelect } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -10,7 +10,18 @@ import { ifCondition, compose } from '@wordpress/compose';
 import BlockTypesList from '../block-types-list';
 import BlockIcon from '../block-icon';
 
-function ChildBlocks( { rootBlockIcon, rootBlockTitle, items, ...props } ) {
+export default function ChildBlocks( { rootClientId, children } ) {
+	const { rootBlockTitle, rootBlockIcon } = useSelect( ( select ) => {
+		const { getBlockType } = select( blocksStore );
+		const { getBlockName } = select( 'core/block-editor' );
+		const rootBlockName = getBlockName( rootClientId );
+		const rootBlockType = getBlockType( rootBlockName );
+		return {
+			rootBlockTitle: rootBlockType && rootBlockType.title,
+			rootBlockIcon: rootBlockType && rootBlockType.icon,
+		};
+	} );
+
 	return (
 		<div className="block-editor-inserter__child-blocks">
 			{ ( rootBlockIcon || rootBlockTitle ) && (
