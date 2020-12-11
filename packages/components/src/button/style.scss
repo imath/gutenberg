@@ -91,10 +91,10 @@
 			/* stylelint-disable */
 			background-image: linear-gradient(
 				-45deg,
-				$theme-color 28%,
-				color($theme-color shade(20%)) 28%,
-				color($theme-color shade(20%)) 72%,
-				$theme-color 72%
+				var(--wp-admin-theme-color) 33%,
+				var(--wp-admin-theme-color-darker-20) 33%,
+				var(--wp-admin-theme-color-darker-20) 70%,
+				var(--wp-admin-theme-color) 70%
 			);
 			/* stylelint-enable */
 			border-color: color($theme-color);
@@ -255,10 +255,10 @@
 		/* stylelint-disable */
 		background-image: linear-gradient(
 			-45deg,
-			color($white shade(2%)) 28%,
-			color($white shade(12%)) 28%,
-			color($white shade(12%)) 72%,
-			color($white shade(2%)) 72%
+			darken($white, 2%) 33%,
+			darken($white, 12%) 33%,
+			darken($white, 12%) 70%,
+			darken($white, 2%) 70%
 		);
 		/* stylelint-enable */
 	}
