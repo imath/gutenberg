@@ -15,7 +15,9 @@ module.exports = async ( { author, description, license, slug, version } ) => {
 	const cwd = join( process.cwd(), slug );
 
 	info( '' );
-	info( 'Installing packages. It might take a couple of minutes...' );
+	info(
+		'Installing `@wordpress/scripts` package. It might take a couple of minutes...'
+	);
 	await command( 'npm install @wordpress/scripts --save-dev', {
 		cwd,
 	} );
