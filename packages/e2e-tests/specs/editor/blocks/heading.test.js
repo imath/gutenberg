@@ -67,7 +67,7 @@ describe( 'Heading', () => {
 		expect( await getEditedPostContent() ).toMatchSnapshot();
 	} );
 
-	it( 'it should correctly apply custom colors', async () => {
+	it( 'should correctly apply custom colors', async () => {
 		await clickBlockAppender();
 		await page.keyboard.type( '### Heading' );
 		const [ colorPanelToggle ] = await page.$x(
@@ -90,7 +90,7 @@ describe( 'Heading', () => {
 		expect( await getEditedPostContent() ).toMatchSnapshot();
 	} );
 
-	it( 'it should correctly apply named colors', async () => {
+	it( 'should correctly apply named colors', async () => {
 		await clickBlockAppender();
 		await page.keyboard.type( '## Heading' );
 		const [ colorPanelToggle ] = await page.$x(

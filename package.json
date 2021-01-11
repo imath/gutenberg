@@ -1,6 +1,6 @@
 {
 	"name": "gutenberg",
-	"version": "9.7.0-rc.1",
+	"version": "9.7.0",
 	"private": true,
 	"description": "A new WordPress editor experience.",
 	"author": "The WordPress Contributors",
@@ -133,6 +133,7 @@
 		"@wordpress/prettier-config": "file:packages/prettier-config",
 		"@wordpress/project-management-automation": "file:packages/project-management-automation",
 		"@wordpress/scripts": "file:packages/scripts",
+		"@wordpress/stylelint-config": "file:packages/stylelint-config",
 		"appium": "1.18.3",
 		"babel-jest": "26.6.3",
 		"babel-loader": "8.1.0",
@@ -165,7 +166,7 @@
 		"jest-serializer-enzyme": "1.0.0",
 		"jest-watch-typeahead": "0.6.1",
 		"jsdom": "16.4.0",
-		"lerna": "3.18.2",
+		"lerna": "3.22.1",
 		"lint-staged": "9.2.5",
 		"lodash": "4.17.19",
 		"make-dir": "3.0.0",
@@ -193,12 +194,12 @@
 		"source-map-loader": "0.2.4",
 		"sprintf-js": "1.1.1",
 		"style-loader": "1.0.0",
-		"stylelint-config-wordpress": "17.0.0",
 		"terser-webpack-plugin": "3.0.3",
 		"typescript": "4.0.3",
 		"uuid": "8.3.0",
 		"wd": "1.12.1",
 		"webpack": "4.42.0",
+		"webpack-bundle-analyzer": "4.2.0",
 		"worker-farm": "1.7.0"
 	},
 	"scripts": {
