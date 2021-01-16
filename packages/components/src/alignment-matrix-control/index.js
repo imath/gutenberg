@@ -3,11 +3,6 @@
  */
 import { noop } from 'lodash';
 import classnames from 'classnames';
-import {
-	unstable_useCompositeState as useCompositeState,
-	unstable_Composite as Composite,
-	unstable_CompositeGroup as CompositeGroup,
-} from 'reakit';
 
 /**
  * WordPress dependencies
@@ -20,6 +15,7 @@ import { useState, useEffect } from '@wordpress/element';
  * Internal dependencies
  */
 import Cell from './cell';
+import { Composite, CompositeGroup, useCompositeState } from '../composite';
 import { Root, Row } from './styles/alignment-matrix-control-styles';
 import AlignmentMatrixControlIcon from './icon';
 import { GRID, getItemId } from './utils';
