@@ -7,7 +7,6 @@ import { render, fireEvent } from '@testing-library/react';
  * WordPress dependencies
  */
 import { registerBlockType, unregisterBlockType } from '@wordpress/blocks';
-import { useSelect } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -71,8 +70,7 @@ describe( 'InserterMenu', () => {
 		useSelect.mockImplementation( () => ( {
 			categories,
 			collections,
-			items,
-		} ) );
+		] );
 	} );
 
 	it( 'should show nothing if there are no items', () => {
@@ -127,18 +125,6 @@ describe( 'InserterMenu', () => {
 		expect( blocks[ 0 ].textContent ).toBe( 'Paragraph' );
 		expect( blocks[ 1 ].textContent ).toBe( 'Advanced Paragraph' );
 		expect( blocks[ 2 ].textContent ).toBe( 'Some Other Block' );
-	} );
-
-	it( 'displays child blocks UI when root block has child blocks', () => {
-		useSelect.mockImplementation( () => true );
-
-		const { container } = render( <InserterBlockList /> );
-
-		const childBlocksContent = container.querySelector(
-			'.block-editor-inserter__child-blocks'
-		);
-
-		expect( childBlocksContent ).not.toBeNull();
 	} );
 
 	it( 'should disable items with `isDisabled`', () => {
