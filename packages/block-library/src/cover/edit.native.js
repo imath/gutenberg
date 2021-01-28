@@ -1,7 +1,11 @@
 /**
  * External dependencies
  */
-import { View, TouchableWithoutFeedback } from 'react-native';
+import {
+	View,
+	TouchableWithoutFeedback,
+	InteractionManager,
+} from 'react-native';
 import Video from 'react-native-video';
 
 /**
@@ -46,7 +50,7 @@ import {
 } from '@wordpress/block-editor';
 import { compose, withPreferredColorScheme } from '@wordpress/compose';
 import { withSelect, withDispatch } from '@wordpress/data';
-import { useEffect, useState, useRef } from '@wordpress/element';
+import { useEffect, useState, useRef, useCallback } from '@wordpress/element';
 import { cover as icon, replace, image, warning } from '@wordpress/icons';
 import { getProtocol } from '@wordpress/url';
 
@@ -88,6 +92,8 @@ const Cover = ( {
 	setAttributes,
 	openGeneralSidebar,
 	closeSettingsBottomSheet,
+	selectBlock,
+	blockWidth,
 } ) => {
 	const {
 		backgroundType,
@@ -133,8 +139,6 @@ const Cover = ( {
 		setCustomColorPickerShowing,
 	] = useState( false );
 
-	const [ customColor, setCustomColor ] = useState( '' );
-
 	const openMediaOptionsRef = useRef();
 
 	// Used to set a default color for its InnerBlocks
@@ -171,15 +175,15 @@ const Cover = ( {
 		onSelect( media );
 	};
 
-	const onHeightChange = ( value ) => {
+	const onHeightChange = useCallback( ( value ) => {
 		if ( minHeight || value !== COVER_DEFAULT_HEIGHT ) {
 			setAttributes( { minHeight: value } );
 		}
-	};
+	}, [] );
 
-	const onOpacityChange = ( value ) => {
+	const onOpacityChange = useCallback( ( value ) => {
 		setAttributes( { dimRatio: value } );
-	};
+	}, [] );
 
 	const onMediaPressed = () => {
 		if ( isUploadInProgress ) {
@@ -201,10 +205,10 @@ const Cover = ( {
 		setIsVideoLoading( false );
 	};
 
-	const onClearMedia = () => {
+	const onClearMedia = useCallback( () => {
 		setAttributes( { id: undefined, url: undefined } );
 		closeSettingsBottomSheet();
-	};
+	}, [] );
 
 	function setColor( color ) {
 		setAttributes( {
@@ -217,10 +221,9 @@ const Cover = ( {
 	}
 
 	function openColorPicker() {
-		if ( isParentSelected ) {
-			setCustomColorPickerShowing( true );
-			openGeneralSidebar();
-		}
+		selectBlock();
+		setCustomColorPickerShowing( true );
+		openGeneralSidebar();
 	}
 
 	const backgroundColor = getStylesFromColorScheme(
@@ -290,6 +293,12 @@ const Cover = ( {
 		} );
 	};
 
+	const onBottomSheetClosed = useCallback( () => {
+		InteractionManager.runAfterInteractions( () => {
+			setCustomColorPickerShowing( false );
+		} );
+	}, [] );
+
 	const controls = (
 		<InspectorControls>
 			<OverlayColorSettings
@@ -354,10 +363,7 @@ const Cover = ( {
 						shouldEnableBottomSheetMaxHeight={
 							shouldEnableBottomSheetMaxHeight
 						}
-						setColor={ ( color ) => {
-							setCustomColor( color );
-							setColor( color );
-						} }
+						setColor={ setColor }
 						onNavigationBack={ closeSettingsBottomSheet }
 						onHandleClosingBottomSheet={
 							onHandleClosingBottomSheet
@@ -365,9 +371,7 @@ const Cover = ( {
 						onHandleHardwareButtonPress={
 							onHandleHardwareButtonPress
 						}
-						onBottomSheetClosed={ () => {
-							setCustomColorPickerShowing( false );
-						} }
+						onBottomSheetClosed={ onBottomSheetClosed }
 						isBottomSheetContentScrolling={
 							isBottomSheetContentScrolling
 						}
@@ -469,9 +473,10 @@ const Cover = ( {
 				{ isCustomColorPickerShowing && colorPickerControls }
 				<MediaPlaceholder
 					height={ styles.mediaPlaceholderEmptyStateContainer.height }
-					backgroundColor={ customColor }
+					backgroundColor={ customOverlayColor }
 					hideContent={
-						customColor !== '' && customColor !== undefined
+						customOverlayColor !== '' &&
+						customOverlayColor !== undefined
 					}
 					icon={ placeholderIcon }
 					labels={ {
@@ -544,6 +549,7 @@ const Cover = ( {
 				<InnerBlocks
 					template={ INNER_BLOCKS_TEMPLATE }
 					templateInsertUpdatesSelection
+					blockWidth={ blockWidth }
 				/>
 			</View>
 
@@ -596,14 +602,16 @@ export default compose( [
 			isParentSelected: selectedBlockClientId === clientId,
 		};
 	} ),
-	withDispatch( ( dispatch ) => {
+	withDispatch( ( dispatch, { clientId } ) => {
 		const { openGeneralSidebar } = dispatch( 'core/edit-post' );
+		const { selectBlock } = dispatch( 'core/block-editor' );
 
 		return {
 			openGeneralSidebar: () => openGeneralSidebar( 'edit-post/block' ),
 			closeSettingsBottomSheet() {
 				dispatch( 'core/edit-post' ).closeGeneralSidebar();
 			},
+			selectBlock: () => selectBlock( clientId ),
 		};
 	} ),
 	withPreferredColorScheme,
