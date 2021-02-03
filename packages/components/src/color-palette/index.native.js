@@ -166,35 +166,6 @@ function ColorPalette( {
 			onScrollEndDrag={ () => shouldEnableBottomSheetScroll( true ) }
 			ref={ scrollViewRef }
 		>
-			{ colors.map( ( color ) => {
-				const scaleValue = isSelected( color ) ? scaleInterpolation : 1;
-				return (
-					<TouchableWithoutFeedback
-						onPress={ () => onColorPress( color ) }
-						key={ `${ color }-${ isSelected( color ) }` }
-					>
-						<Animated.View
-							style={ {
-								transform: [
-									{
-										scale: scaleValue,
-									},
-								],
-							} }
-						>
-							<ColorIndicator
-								color={ color }
-								isSelected={ isSelected( color ) }
-								opacity={ opacity }
-								style={ [
-									styles.colorIndicator,
-									customColorIndicatorStyles,
-								] }
-							/>
-						</Animated.View>
-					</TouchableWithoutFeedback>
-				);
-			} ) }
 			{ shouldShowCustomIndicator && (
 				<View
 					style={ customIndicatorWrapperStyle }
@@ -230,6 +201,41 @@ function ColorPalette( {
 					</TouchableWithoutFeedback>
 				</>
 			) }
+			{ colors.map( ( color ) => {
+				const scaleValue = isSelected( color ) ? scaleInterpolation : 1;
+				return (
+					<View key={ `${ color }-${ isSelected( color ) }` }>
+						<TouchableWithoutFeedback
+							onPress={ () => onColorPress( color ) }
+							accessibilityRole={ 'button' }
+							accessibilityState={ {
+								selected: isSelected( color ),
+							} }
+							accessibilityHint={ color }
+						>
+							<Animated.View
+								style={ {
+									transform: [
+										{
+											scale: scaleValue,
+										},
+									],
+								} }
+							>
+								<ColorIndicator
+									color={ color }
+									isSelected={ isSelected( color ) }
+									opacity={ opacity }
+									style={ [
+										styles.colorIndicator,
+										customColorIndicatorStyles,
+									] }
+								/>
+							</Animated.View>
+						</TouchableWithoutFeedback>
+					</View>
+				);
+			} ) }
 		</ScrollView>
 	);
 }
