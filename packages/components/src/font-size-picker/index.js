@@ -9,6 +9,7 @@ import { isNumber, isString } from 'lodash';
 import { __ } from '@wordpress/i18n';
 import { useInstanceId } from '@wordpress/compose';
 import { textColor } from '@wordpress/icons';
+import { useMemo, forwardRef } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -170,4 +171,4 @@ function FontSizePicker(
 	);
 }
 
-export default withNextComponent( FontSizePicker );
+export default withNextComponent( forwardRef( FontSizePicker ) );

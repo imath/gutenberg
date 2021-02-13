@@ -68,6 +68,7 @@ function Navigation( {
 				'core/navigation-link',
 				'core/search',
 				'core/social-links',
+				'core/page-list',
 			],
 			orientation: attributes.orientation || 'horizontal',
 			renderAppender:
@@ -106,23 +107,15 @@ function Navigation( {
 		);
 	}
 
-	function handleItemsAlignment( align ) {
-		return () => {
-			const itemsJustification =
-				attributes.itemsJustification === align ? undefined : align;
-			setAttributes( {
-				itemsJustification,
-			} );
-		};
-	}
-
 	return (
 		<>
 			<BlockControls>
 				{ hasItemJustificationControls && (
 					<JustifyToolbar
 						value={ attributes.itemsJustification }
-						onChange={ handleItemsAlignment }
+						onChange={ ( value ) =>
+							setAttributes( { itemsJustification: value } )
+						}
 						popoverProps={ {
 							position: 'bottom right',
 							isAlternate: true,

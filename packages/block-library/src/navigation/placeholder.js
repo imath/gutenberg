@@ -97,71 +97,6 @@ function convertMenuItemsToBlocks( menuItems ) {
 	return mapMenuItemsToBlocks( menuTree );
 }
 
-/**
- * Convert pages to blocks.
- *
- * @param {Object[]} pages An array of pages.
- *
- * @return {WPBlock[]} An array of blocks.
- */
-function convertPagesToBlocks( pages ) {
-	if ( ! pages ) {
-		return null;
-	}
-
-	return pages.map( ( { title, type, link: url, id } ) =>
-		createBlock( 'core/navigation-link', {
-			type,
-			id,
-			url,
-			label: ! title.rendered ? __( '(no title)' ) : title.rendered,
-			opensInNewTab: false,
-		} )
-	);
-}
-
-/**
- * Returns a value that indicates whether the create button should be disabled.
- *
- * @param {Object}  selectedCreateOption An object containing details of
- *                                       the selected create option.
- * @param {boolean} hasResolvedPages     Indicates whether pages have loaded.
- * @param {boolean} hasResolvedMenuItems Indicates whether menu items have loaded.
- *
- * @return {boolean} A value that indicates whether the create button is disabled.
- */
-function getIsCreateButtonDisabled(
-	selectedCreateOption,
-	hasResolvedPages,
-	hasResolvedMenuItems
-) {
-	// If there is no key at all then disable.
-	if ( ! selectedCreateOption ) {
-		return true;
-	}
-
-	const optionKey = selectedCreateOption?.key;
-
-	// Always disable if the default "placeholder" option is selected.
-	if ( optionKey === CREATE_PLACEHOLDER_VALUE ) {
-		return true;
-	}
-
-	// Always enable if Create Empty is selected.
-	if ( optionKey === CREATE_EMPTY_OPTION_VALUE ) {
-		return false;
-	}
-
-	// Enable if Pages option selected and we have Pages available.
-	if ( optionKey === CREATE_FROM_PAGES_OPTION_VALUE && hasResolvedPages ) {
-		return false;
-	}
-
-	// Enable if a menu is selected and menu items have loaded.
-	const selectedMenu = getSelectedMenu( selectedCreateOption );
-	return selectedMenu === undefined || ! hasResolvedMenuItems;
-}
-
 function NavigationPlaceholder( { onCreate }, ref ) {
 	const [ selectedMenu, setSelectedMenu ] = useState();
 
@@ -260,9 +195,9 @@ function NavigationPlaceholder( { onCreate }, ref ) {
 	};
 
 	const onCreateAllPages = () => {
-		const blocks = convertPagesToBlocks( pages );
+		const block = [ createBlock( 'core/page-list' ) ];
 		const selectNavigationBlock = true;
-		onCreate( blocks, selectNavigationBlock );
+		onCreate( block, selectNavigationBlock );
 	};
 
 		// Infer that the user selected a menu to create from.
