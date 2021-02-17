@@ -49,6 +49,7 @@ class BottomSheet extends Component {
 		this.onScroll = this.onScroll.bind( this );
 		this.isScrolling = this.isScrolling.bind( this );
 		this.onShouldEnableScroll = this.onShouldEnableScroll.bind( this );
+		this.onDismiss = this.onDismiss.bind( this );
 		this.onShouldSetBottomSheetMaxHeight = this.onShouldSetBottomSheetMaxHeight.bind(
 			this
 		);
@@ -212,6 +213,16 @@ class BottomSheet extends Component {
 		}
 	}
 
+	onDismiss() {
+		const { onDismiss } = this.props;
+
+		if ( onDismiss ) {
+			onDismiss();
+		}
+
+		this.onCloseBottomSheet();
+	}
+
 	onShouldEnableScroll( value ) {
 		this.setState( { scrollEnabled: value } );
 	}
@@ -237,6 +248,7 @@ class BottomSheet extends Component {
 		const { handleClosingBottomSheet } = this.state;
 		if ( handleClosingBottomSheet ) {
 			handleClosingBottomSheet();
+			this.onHandleClosingBottomSheet( null );
 		}
 		if ( onClose ) {
 			onClose();
@@ -284,7 +296,6 @@ class BottomSheet extends Component {
 			style = {},
 			contentStyle = {},
 			getStylesFromColorScheme,
-			onDismiss,
 			children,
 			withHeaderSeparator = false,
 			hasNavigation,
@@ -369,6 +380,7 @@ class BottomSheet extends Component {
 				{ withHeaderSeparator && <View style={ styles.separator } /> }
 			</>
 		);
+
 		return (
 			<Modal
 				isVisible={ isVisible }
@@ -381,9 +393,9 @@ class BottomSheet extends Component {
 				onBackdropPress={ this.onCloseBottomSheet }
 				onBackButtonPress={ this.onHardwareButtonPress }
 				onSwipe={ this.onCloseBottomSheet }
-				onDismiss={ Platform.OS === 'ios' ? onDismiss : undefined }
+				onDismiss={ Platform.OS === 'ios' ? this.onDismiss : undefined }
 				onModalHide={
-					Platform.OS === 'android' ? onDismiss : undefined
+					Platform.OS === 'android' ? this.onDismiss : undefined
 				}
 				swipeDirection="down"
 				onMoveShouldSetResponder={

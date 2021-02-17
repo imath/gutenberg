@@ -8,8 +8,8 @@ import { map, filter } from 'lodash';
  * WordPress dependencies
  */
 import { __, _x } from '@wordpress/i18n';
-import { compose } from '@wordpress/compose';
-import { withSelect } from '@wordpress/data';
+import { useSelect } from '@wordpress/data';
+import { useState, useRef } from '@wordpress/element';
 import {
 	BlockControls,
 	BlockVerticalAlignmentToolbar,
@@ -18,6 +18,7 @@ import {
 	useBlockProps,
 	__experimentalImageURLInputUI as ImageURLInputUI,
 	__experimentalImageSizeControl as ImageSizeControl,
+	store as blockEditorStore,
 } from '@wordpress/block-editor';
 import { Component } from '@wordpress/element';
 import {
@@ -29,6 +30,7 @@ import {
 	FocalPointPicker,
 } from '@wordpress/components';
 import { pullLeft, pullRight } from '@wordpress/icons';
+import { store as coreStore } from '@wordpress/core-data';
 
 /**
  * Internal dependencies
@@ -141,15 +143,22 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 	} = attributes;
 	const mediaSizeSlug = attributes.mediaSizeSlug || DEFAULT_MEDIA_SIZE_SLUG;
 
-	onWidthChange( width ) {
-		this.setState( {
-			mediaWidth: applyWidthConstraints( width ),
-		} );
-	}
+	const image = useSelect(
+		( select ) =>
+			mediaId && isSelected
+				? select( coreStore ).getMedia( mediaId )
+				: null,
+		[ isSelected, mediaId ]
+	);
 
-	onSetHref( props ) {
-		this.props.setAttributes( props );
-	}
+	const refMediaContainer = useRef();
+	const imperativeFocalPointPreview = ( value ) => {
+		const { style } = refMediaContainer.current.resizable;
+		const { x, y } = value;
+		style.backgroundPosition = `${ x * 100 }% ${ y * 100 }%`;
+	};
+
+	const [ temporaryMediaWidth, setTemporaryMediaWidth ] = useState( null );
 
 	commitWidthChange( width ) {
 		const { setAttributes } = this.props;
@@ -200,7 +209,7 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 	};
 
 	const imageSizes = useSelect( ( select ) => {
-		const settings = select( 'core/block-editor' ).getSettings();
+		const settings = select( blockEditorStore ).getSettings();
 		return settings?.imageSizes;
 	} );
 	const imageSizeOptions = map(
@@ -318,6 +327,8 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 					onChange={ ( value ) =>
 						setAttributes( { focalPoint: value } )
 					}
+					onDragStart={ imperativeFocalPointPreview }
+					onDrag={ imperativeFocalPointPreview }
 				/>
 			) }
 			{ mediaType === 'image' && (
@@ -385,6 +396,7 @@ function MediaTextEdit( { attributes, isSelected, setAttributes } ) {
 					onSelectMedia={ onSelectMedia }
 					onWidthChange={ onWidthChange }
 					commitWidthChange={ commitWidthChange }
+					ref={ refMediaContainer }
 					{ ...{
 						focalPoint,
 						imageFill,

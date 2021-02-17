@@ -91,9 +91,15 @@ function ColorPalette( {
 	}, [ currentSegment ] );
 
 	function isSelectedCustom() {
-		return (
-			! isGradientColor && activeColor && ! colors.includes( activeColor )
-		);
+		const isWithinColors =
+			activeColor && colors && colors.includes( activeColor );
+		if ( activeColor ) {
+			if ( isGradientSegment ) {
+				return isGradientColor && ! isWithinColors;
+			}
+			return ! isGradientColor && ! isWithinColors;
+		}
+		return false;
 	}
 
 	function isSelected( color ) {
