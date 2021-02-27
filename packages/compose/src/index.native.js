@@ -11,6 +11,7 @@ export { default as withGlobalEvents } from './higher-order/with-global-events';
 export { default as withInstanceId } from './higher-order/with-instance-id';
 export { default as withSafeTimeout } from './higher-order/with-safe-timeout';
 export { default as withState } from './higher-order/with-state';
+export { default as withPreferredColorScheme } from './higher-order/with-preferred-color-scheme';
 
 // Hooks
 export { default as useConstrainedTabbing } from './hooks/use-constrained-tabbing';
@@ -22,12 +23,9 @@ export { default as useKeyboardShortcut } from './hooks/use-keyboard-shortcut';
 export { default as useMediaQuery } from './hooks/use-media-query';
 export { default as useReducedMotion } from './hooks/use-reduced-motion';
 export { default as useViewportMatch } from './hooks/use-viewport-match';
-
-// Higher-order components
-export { default as withPreferredColorScheme } from './higher-order/with-preferred-color-scheme';
-
-// Hooks
+export { default as useAsyncList } from './hooks/use-async-list';
 export { default as usePreferredColorScheme } from './hooks/use-preferred-color-scheme';
 export { default as usePreferredColorSchemeStyle } from './hooks/use-preferred-color-scheme-style';
 export { default as useResizeObserver } from './hooks/use-resize-observer';
 export { default as useDebounce } from './hooks/use-debounce';
+export { default as useMergeRefs } from './hooks/use-merge-refs';
