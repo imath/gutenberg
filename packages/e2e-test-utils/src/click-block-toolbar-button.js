@@ -17,7 +17,7 @@ export async function clickBlockToolbarButton( label, type = 'ariaLabel' ) {
 
 	if ( type === 'content' ) {
 		button = await page.waitForXPath(
-			`//*[@class='${ BLOCK_TOOLBAR_SELECTOR }']//button[contains(text(), '${ label }')]`
+			`//*[contains(concat(' ', normalize-space(@class), ' '), ' ${ BLOCK_TOOLBAR_SELECTOR } ')]//button[contains(text(), '${ label }')]`
 		);
 	}
 

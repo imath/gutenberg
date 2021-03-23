@@ -318,7 +318,7 @@ describe( 'Navigation editor', () => {
 		expect( submenuLinkVisible ).toBeDefined();
 
 		// click in the top left corner of the canvas.
-		const canvas = await page.$( '.edit-navigation-layout__canvas' );
+		const canvas = await page.$( '.edit-navigation-layout__content-area' );
 		const boundingBox = await canvas.boundingBox();
 		await page.mouse.click( boundingBox.x + 5, boundingBox.y + 5 );
 
@@ -347,26 +347,17 @@ describe( 'Navigation editor', () => {
 		);
 		await startEmptyButton.click();
 
-		// NOTE - the following code is commented out.
-		// In CI the editor doesn't seem to support variations.
-		// The following code can be re-introduced once that's resolved.
-		// Add an inner link block.
-		// const appender = await page.waitForSelector(
-		// 	'button[aria-label="Add block"]'
-		// );
-		// await appender.click();
+		const appender = await page.waitForSelector(
+			'button[aria-label="Add block"]'
+		);
+		await appender.click();
 
 		// Must be an exact match to the word 'Link' as other
 		// variations also contain the word 'Link'.
-		// const linkInserterItem = await page.waitForXPath(
-		// 	'//button[@role="option"]//span[.="Link"]'
-		// );
-		// await linkInserterItem.click();
-
-		const appender = await page.waitForSelector(
-			'button[aria-label="Add Link"]'
+		const linkInserterItem = await page.waitForXPath(
+			'//button[@role="option"]//span[.="Link"]'
 		);
-		await appender.click();
+		await linkInserterItem.click();
 
 		await page.waitForSelector( 'input[aria-label="URL"]' );
 

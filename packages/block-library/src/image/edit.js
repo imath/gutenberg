@@ -11,7 +11,7 @@ import { getBlobByURL, isBlobURL, revokeBlobURL } from '@wordpress/blob';
 import { withNotices } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import {
-	BlockAlignmentToolbar,
+	BlockAlignmentControl,
 	BlockControls,
 	BlockIcon,
 	MediaPlaceholder,
@@ -207,6 +207,8 @@ export function ImageEdit( {
 			setAttributes( {
 				url: newURL,
 				id: undefined,
+				width: undefined,
+				height: undefined,
 				sizeSlug: DEFAULT_SIZE_SLUG,
 			} );
 		}
@@ -277,7 +279,6 @@ export function ImageEdit( {
 	const classes = classnames( className, {
 		'is-transient': isBlobURL( url ),
 		'is-resized': !! width || !! height,
-		'is-focused': isSelected,
 		[ `size-${ sizeSlug }` ]: sizeSlug,
 	} );
 
@@ -302,8 +303,8 @@ export function ImageEdit( {
 				/>
 			) }
 			{ ! url && (
-				<BlockControls>
-					<BlockAlignmentToolbar
+				<BlockControls group="block">
+					<BlockAlignmentControl
 						value={ align }
 						onChange={ updateAlignment }
 					/>

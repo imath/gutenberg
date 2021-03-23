@@ -57,8 +57,27 @@ const ResizableBoxContainer = forwardRef(
 	}
 );
 
-	onUploadError( message ) {
-		const { noticeOperations } = this.props;
+function ToolbarEditButton( { mediaId, mediaUrl, onSelectMedia } ) {
+	return (
+		<BlockControls group="other">
+			<MediaReplaceFlow
+				mediaId={ mediaId }
+				mediaURL={ mediaUrl }
+				allowedTypes={ ALLOWED_MEDIA_TYPES }
+				accept="image/*,video/*"
+				onSelect={ onSelectMedia }
+			/>
+		</BlockControls>
+	);
+}
+
+function PlaceholderContainer( {
+	className,
+	noticeOperations,
+	noticeUI,
+	onSelectMedia,
+} ) {
+	const onUploadError = ( message ) => {
 		noticeOperations.removeAllNotices();
 		noticeOperations.createErrorNotice( message );
 	};
