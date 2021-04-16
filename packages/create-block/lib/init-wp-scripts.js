@@ -24,7 +24,7 @@ module.exports = async ( { author, description, license, slug, version } ) => {
 
 	info( '' );
 	info( 'Formatting JavaScript files.' );
-	await command( 'npm run format:js', {
+	await command( 'npm run format', {
 		cwd,
 	} );
 
