@@ -25,3 +25,20 @@ export const _default = () => {
 		</Card>
 	);
 };
+
+export const alignment = () => {
+	const props = getCardStoryProps();
+	const content = text( 'Header: children', 'Content' );
+	const isShady = boolean( 'Header: isShady', false );
+
+	return (
+		<Card { ...props }>
+			<CardHeader isShady={ isShady }>
+				<FlexBlock>{ content }</FlexBlock>
+				<FlexItem>
+					<Button variant="primary">Action</Button>
+				</FlexItem>
+			</CardHeader>
+		</Card>
+	);
+};

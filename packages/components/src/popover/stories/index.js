@@ -102,3 +102,52 @@ export const positioning = () => {
 		<DragExample label={ label } content={ content } noArrow={ noArrow } />
 	);
 };
+
+function DynamicHeightPopover() {
+	const [ height, setHeight ] = useState( 200 );
+	const increase = () => setHeight( height + 100 );
+	const decrease = () => setHeight( height - 100 );
+
+	return (
+		<div style={ { padding: '20px' } }>
+			<div>
+				<Button
+					variant="primary"
+					onClick={ increase }
+					style={ {
+						marginRight: '20px',
+					} }
+				>
+					Increase Size
+				</Button>
+
+				<Button variant="primary" onClick={ decrease }>
+					Decrease Size
+				</Button>
+			</div>
+
+			<p>
+				When the height of the popover exceeds the available space in
+				the canvas, a scrollbar inside the popover should appear.
+			</p>
+
+			<div>
+				<Popover>
+					<div
+						style={ {
+							height,
+							background: '#eee',
+							padding: '20px',
+						} }
+					>
+						Content with dynamic height
+					</div>
+				</Popover>
+			</div>
+		</div>
+	);
+}
+
+export const dynamicHeight = () => {
+	return <DynamicHeightPopover />;
+};

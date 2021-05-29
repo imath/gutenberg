@@ -138,7 +138,7 @@ function FontSizePicker(
 						onChange( undefined );
 					} }
 					isSmall
-					isSecondary
+					variant="secondary"
 				>
 					{ __( 'Reset' ) }
 				</Button>

@@ -83,7 +83,7 @@ function NavigationPlaceholder( { onCreate }, ref ) {
 	} );
 
 	const toggleProps = {
-		isPrimary: true,
+		variant: 'primary',
 		className: 'wp-block-navigation-placeholder__actions__dropdown',
 	};
 	return (
@@ -134,14 +134,16 @@ function NavigationPlaceholder( { onCreate }, ref ) {
 						) : undefined }
 						{ hasPages ? (
 							<Button
-								isPrimary={ hasMenus ? false : true }
-								isTertiary={ hasMenus ? true : false }
+								variant={ hasMenus ? 'tertiary' : 'primary' }
 								onClick={ onCreateAllPages }
 							>
 								{ __( 'Add all pages' ) }
 							</Button>
 						) : undefined }
-						<Button isTertiary onClick={ onCreateEmptyMenu }>
+						<Button
+							variant="tertiary"
+							onClick={ onCreateEmptyMenu }
+						>
 							{ __( 'Start empty' ) }
 						</Button>
 					</div>

@@ -25,3 +25,20 @@ export const _default = () => {
 		</Card>
 	);
 };
+
+export const alignment = () => {
+	const props = getCardStoryProps();
+	const content = text( 'Footer: children', 'Content' );
+	const isShady = boolean( 'Footer: isShady', false );
+
+	return (
+		<Card { ...props }>
+			<CardFooter isShady={ isShady }>
+				<FlexBlock>{ content }</FlexBlock>
+				<FlexItem>
+					<Button variant="primary">Action</Button>
+				</FlexItem>
+			</CardFooter>
+		</Card>
+	);
+};
