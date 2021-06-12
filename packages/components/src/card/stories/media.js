@@ -9,11 +9,7 @@ import styled from '@emotion/styled';
 /**
  * Internal dependencies
  */
-import Card from '../index';
-import CardBody from '../body';
-import CardFooter from '../footer';
-import CardHeader from '../header';
-import CardMedia from '../media';
+import { Card, CardBody, CardFooter, CardHeader, CardMedia } from '../';
 import { getCardStoryProps } from './_utils';
 
 export default { title: 'Components/Card/Media', component: CardMedia };
