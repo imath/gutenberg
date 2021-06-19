@@ -473,7 +473,8 @@ function gutenberg_block_has_support( $block_type, $feature, $default = false ) 
  * @return array          Metadata for registering a block type with the supports shape updated.
  */
 function gutenberg_migrate_old_typography_shape( $metadata ) {
-	if ( isset( $metadata['supports'] ) ) {
+	// Temporarily disable migrations from core blocks to avoid warnings on versions older than 5.8.
+	if ( isset( $metadata['supports'] ) && false === strpos( $metadata['file'], '/wp-includes/blocks/' ) ) {
 		$typography_keys = array(
 			'__experimentalFontFamily',
 			'__experimentalFontStyle',
@@ -500,4 +501,6 @@ function gutenberg_migrate_old_typography_shape( $metadata ) {
 	return $metadata;
 }
 
-add_filter( 'block_type_metadata', 'gutenberg_migrate_old_typography_shape' );
+if ( ! function_exists( 'wp_migrate_old_typography_shape' ) ) {
+	add_filter( 'block_type_metadata', 'gutenberg_migrate_old_typography_shape' );
+}
