@@ -39,6 +39,7 @@ export { default as Button } from './button';
 export { default as __experimentalText } from './text';
 export { default as TextControl } from './text-control';
 export { default as ToggleControl } from './toggle-control';
+export { default as SearchControl } from './search-control';
 export { default as SelectControl } from './select-control';
 export { default as RangeControl } from './range-control';
 export { default as ResizableBox } from './resizable-box';
