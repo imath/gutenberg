@@ -37,7 +37,7 @@ function ColumnEdit( {
 	} );
 
 	const units = useCustomUnits( {
-		availableUnits: useSetting( 'layout.units' ) || [
+		availableUnits: useSetting( 'spacing.units' ) || [
 			'%',
 			'px',
 			'em',
