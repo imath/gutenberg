@@ -51,6 +51,7 @@ const postTypeEntities = [
 		meta: true,
 	},
 } ) );
+import { EditorHelpTopics } from '@wordpress/editor';
 
 /**
  * Internal dependencies
@@ -78,6 +79,9 @@ class NativeEditorProvider extends Component {
 				maxSize: 1,
 			}
 		);
+		this.state = {
+			isHelpVisible: false,
+		};
 	}
 
 	componentDidMount() {
@@ -154,9 +158,7 @@ class NativeEditorProvider extends Component {
 		this.subscriptionParentShowEditorHelp = subscribeShowEditorHelp( () => {
 			// Temporary: feature hidden from production. This is just here for testing
 			// purposes and will be replaced with actual logic in a later PR.
-			this.props.createSuccessNotice(
-				'Show Editor Help request received by JS!'
-			);
+			this.setState( { isHelpVisible: true } );
 		} );
 	}
 
@@ -288,13 +290,19 @@ class NativeEditorProvider extends Component {
 		const editorSettings = this.getEditorSettings( settings, capabilities );
 
 		return (
-			<EditorProvider
-				post={ this.post }
-				settings={ editorSettings }
-				{ ...props }
-			>
-				{ children }
-			</EditorProvider>
+			<>
+				<EditorProvider
+					post={ this.post }
+					settings={ editorSettings }
+					{ ...props }
+				>
+					{ children }
+				</EditorProvider>
+				<EditorHelpTopics
+					isVisible={ this.state.isHelpVisible }
+					onClose={ () => this.setState( { isHelpVisible: false } ) }
+				/>
+			</>
 		);
 	}
 }
